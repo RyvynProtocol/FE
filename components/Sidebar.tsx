@@ -1,17 +1,20 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Home, ArrowLeftRight, TrendingUp, Vault, Menu, X } from 'lucide-react';
 import { WalletConnect } from './WalletConnect';
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = React.useState(false);
+  const pathname = usePathname();
 
   const menuItems = [
-    { icon: Home, label: 'Dashboard', href: '#' },
-    { icon: ArrowLeftRight, label: 'Transfer', href: '#' },
-    { icon: TrendingUp, label: 'Stream Bonds', href: '#' },
-    { icon: Vault, label: 'Treasury', href: '#' },
+    { icon: Home, label: 'Dashboard', href: '/' },
+    { icon: ArrowLeftRight, label: 'Transfer', href: '/transfer' },
+    { icon: TrendingUp, label: 'Stream Bonds', href: '/stream-bonds' },
+    { icon: Vault, label: 'Treasury', href: '/treasury' },
   ];
 
   return (
@@ -56,16 +59,26 @@ export default function Sidebar() {
 
         {/* Navigation Menu */}
         <nav className="flex-1 p-4 space-y-2">
-          {menuItems.map((item, index) => (
-            <a
-              key={index}
-              href={item.href}
-              className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/50 transition-all group"
-            >
-              <item.icon className="w-5 h-5 group-hover:scale-110 transition-transform" />
-              <span className="font-medium">{item.label}</span>
-            </a>
-          ))}
+          {menuItems.map((item, index) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={index}
+                href={item.href}
+                onClick={() => setIsOpen(false)}
+                className={`
+                  flex items-center gap-3 px-4 py-3 rounded-lg transition-all group
+                  ${isActive
+                    ? 'bg-gradient-to-r from-blue-500/20 to-purple-600/20 border border-blue-500/30 text-white'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800/50'
+                  }
+                `}
+              >
+                <item.icon className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                <span className="font-medium">{item.label}</span>
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Wallet Connect at Bottom */}
