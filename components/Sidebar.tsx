@@ -13,7 +13,7 @@ export default function Sidebar() {
   const menuItems = [
     { icon: Home, label: 'Dashboard', href: '/' },
     { icon: ArrowLeftRight, label: 'Transfer', href: '/transfer' },
-    { icon: TrendingUp, label: 'Stream Bonds', href: '/stream-bonds' },
+    { icon: TrendingUp, label: 'Yield Bonds', href: '/stream-bonds' },
     { icon: Vault, label: 'Treasury', href: '/treasury' },
   ];
 
