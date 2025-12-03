@@ -1,11 +1,11 @@
 'use client';
 
 import React from 'react';
-import { Wallet, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
+import { WalletConnect } from './WalletConnect';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const [isConnected, setIsConnected] = React.useState(false);
 
   return (
     <nav className="glass-card mx-6 mt-6 mb-8">
@@ -29,20 +29,7 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-4">
-            {isConnected ? (
-              <button className="px-6 py-2.5 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl font-medium text-white hover:opacity-90 transition-all flex items-center gap-2 glow">
-                <Wallet className="w-4 h-4" />
-                0x7a...f2d9
-              </button>
-            ) : (
-              <button
-                onClick={() => setIsConnected(true)}
-                className="px-6 py-2.5 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl font-medium text-white hover:opacity-90 transition-all flex items-center gap-2"
-              >
-                <Wallet className="w-4 h-4" />
-                Connect Wallet
-              </button>
-            )}
+            <WalletConnect />
 
             <button
               className="md:hidden text-white"

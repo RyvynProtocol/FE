@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Wallet, TrendingUp, Zap, Users } from 'lucide-react';
-import Navbar from '@/components/Navbar';
+import Sidebar from '@/components/Sidebar';
 import StatCard from '@/components/StatCard';
 import TransferCard from '@/components/TransferCard';
 import StreamBondsCard from '@/components/StreamBondsCard';
@@ -15,10 +15,10 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-purple-900/20 pointer-events-none"></div>
 
-      <div className="relative z-10">
-        <Navbar />
+      <Sidebar />
 
-        <main className="max-w-7xl mx-auto px-6 pb-12">
+      <div className="relative z-10 md:ml-64">
+        <main className="max-w-7xl mx-auto px-6 py-8 pb-12">
           {/* Hero Section */}
           <div className="text-center mb-12">
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
