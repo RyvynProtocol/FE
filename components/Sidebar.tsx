@@ -46,13 +46,15 @@ export default function Sidebar() {
       >
         {/* Logo */}
         <div className="p-6 border-b border-slate-700/50">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center font-bold text-white">
-              B
-            </div>
+          <div className="flex items-center gap-2">
+            <img
+              src="/logo.png"
+              alt="Ryvyn Logo"
+              className="w-16 h-16 object-contain"
+            />
             <div>
-              <h1 className="text-xl font-bold text-white">USDC-B</h1>
-              <p className="text-xs text-slate-400">Yield-Backed</p>
+              <h1 className="text-xl font-bold text-white">Ryvyn</h1>
+              <p className="text-xs text-slate-400">Yield-Backed Stablecoin</p>
             </div>
           </div>
         </div>

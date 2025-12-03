@@ -32,7 +32,7 @@ export function WalletConnect() {
     return (
       <button
         disabled
-        className="px-4 py-2 bg-gray-600 text-white rounded-lg cursor-not-allowed"
+        className="px-4 py-2 bg-gray-600 text-white rounded-lg cursor-not-allowed flex items-center justify-center"
       >
         Loading...
       </button>
@@ -49,7 +49,7 @@ export function WalletConnect() {
         </div>
         <button
           onClick={handleLogout}
-          className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+          className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors flex items-center justify-center"
         >
           Disconnect
         </button>
@@ -60,7 +60,7 @@ export function WalletConnect() {
   return (
     <button
       onClick={handleLogin}
-      className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors font-medium"
+      className="w-full px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors font-medium flex items-center justify-center"
     >
       Connect Wallet
     </button>
