@@ -25,14 +25,14 @@ export function PrivyProvider({ children }: { children: React.ReactNode }) {
         },
         loginMethods: ['wallet', 'email'],
         embeddedWallets: {
-          createOnLogin: 'users-without-wallets',
+          ethereum: {
+            createOnLogin: 'users-without-wallets',
+          },
         },
       }}
     >
       <QueryClientProvider client={queryClient}>
-        <WagmiProvider config={config}>
-          {children}
-        </WagmiProvider>
+        <WagmiProvider config={config}>{children}</WagmiProvider>
       </QueryClientProvider>
     </Privy>
   );

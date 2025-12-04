@@ -13,11 +13,10 @@ export default function Home() {
       <div className="relative z-10 md:ml-64">
         <main className="max-w-7xl mx-auto px-6 py-8 pb-12">
           <div className="text-center mt-20">
-            <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
-              Welcome to USDC-B
-            </h1>
+            <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">Welcome to USDC-B</h1>
             <p className="text-xl text-slate-400 max-w-2xl mx-auto">
-              The first stablecoin that rewards every transaction with real-world asset-backed yields
+              The first stablecoin that rewards every transaction with real-world asset-backed
+              yields
             </p>
           </div>
         </main>

@@ -1,12 +1,13 @@
 {
-  "name": "usdc-b-app",
+  "name": "ryvyn-protocol",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "@privy-io/react-auth": "^3.8.1",
