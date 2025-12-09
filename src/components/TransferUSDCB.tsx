@@ -17,7 +17,57 @@ export default function TransferUSDCB() {
   // Mock data - replace with actual contract calls
   const userUSDCBBalance = '12,458.50'; // Replace with actual balance
   const estimatedGas = '0.0008'; // Replace with actual gas estimation
-  const estimatedReward = amount ? (parseFloat(amount) * 0.005).toFixed(4) : '0.00'; // 0.5% reward
+  const totalReward = amount ? parseFloat(amount) * 0.01 : 0; // 1% total reward
+  const senderReward = (totalReward * 0.7).toFixed(4); // 70% for sender
+  const receiverReward = (totalReward * 0.3).toFixed(4); // 30% for receiver
+
+  // Mock transfer history data
+  const transferHistory = [
+    {
+      amount: '500',
+      from: '0x1234...5678',
+      to: '0xabcd...ef12',
+      timestamp: Date.now() - 3600000 * 2, // 2 hours ago
+      senderReward: '3.5', // 70% of 5
+      receiverReward: '1.5', // 30% of 5
+    },
+    {
+      amount: '1000',
+      from: '0x9876...5432',
+      to: '0x1234...5678',
+      timestamp: Date.now() - 86400000 * 1, // 1 day ago
+      senderReward: '7.0', // 70% of 10
+      receiverReward: '3.0', // 30% of 10
+    },
+    {
+      amount: '250',
+      from: '0x1234...5678',
+      to: '0x2468...1357',
+      timestamp: Date.now() - 86400000 * 3, // 3 days ago
+      senderReward: '1.75', // 70% of 2.5
+      receiverReward: '0.75', // 30% of 2.5
+    },
+    {
+      amount: '750',
+      from: '0xfedc...ba98',
+      to: '0x1234...5678',
+      timestamp: Date.now() - 86400000 * 5, // 5 days ago
+      senderReward: '5.25', // 70% of 7.5
+      receiverReward: '2.25', // 30% of 7.5
+    },
+  ];
+
+  // Format timestamp to date time
+  const formatDateTime = (timestamp: number) => {
+    const date = new Date(timestamp);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+
+    return `${day}/${month}/${year} ${hours}:${minutes}`;
+  };
 
   const handleTransfer = async () => {
     if (!authenticated || !connectedWallet) {
@@ -60,9 +110,10 @@ export default function TransferUSDCB() {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      {/* Main Transfer Card */}
-      <div className="lg:col-span-2">
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Main Transfer Card */}
+        <div className="lg:col-span-2">
         <div className="glass-card p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-white">Transfer USDC-B</h2>
@@ -117,7 +168,7 @@ export default function TransferUSDCB() {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="0.00"
-              className="flex-1 bg-transparent text-3xl text-white outline-none"
+              className="flex-1 bg-transparent text-3xl text-white outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               disabled={!authenticated}
             />
             <div className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-blue-500/20 to-purple-600/20 border border-blue-500/30 rounded-lg">
@@ -137,12 +188,12 @@ export default function TransferUSDCB() {
               <span className="text-white">{estimatedGas} ETH</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-slate-400">Your Reward (Sender)</span>
-              <span className="text-green-400">+{estimatedReward} USDC-B</span>
+              <span className="text-slate-400">Your Reward (Sender - 70%)</span>
+              <span className="text-green-400">+{senderReward} USDC-B</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-slate-400">Recipient Reward</span>
-              <span className="text-green-400">+{estimatedReward} USDC-B</span>
+              <span className="text-slate-400">Recipient Reward (30%)</span>
+              <span className="text-green-400">+{receiverReward} USDC-B</span>
             </div>
             <div className="flex justify-between text-sm pt-2 border-t border-slate-700/50">
               <span className="text-slate-400 font-medium">Recipient Receives</span>
@@ -203,47 +254,19 @@ export default function TransferUSDCB() {
               <div className="w-6 h-6 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center flex-shrink-0 font-bold">
                 1
               </div>
-              <p>Sender earns 0.5% in Stream Bonds</p>
+              <p>Sender earns 70% of total rewards in Stream Bonds</p>
             </div>
             <div className="flex gap-3">
               <div className="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center flex-shrink-0 font-bold">
                 2
               </div>
-              <p>Recipient earns 0.5% in Stream Bonds</p>
+              <p>Recipient earns 30% of total rewards in Stream Bonds</p>
             </div>
             <div className="flex gap-3">
               <div className="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center flex-shrink-0 font-bold">
                 3
               </div>
               <p>Stream Bonds accumulate yield over time</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Why Transfer? */}
-        <div className="glass-card p-6">
-          <h3 className="text-lg font-bold text-white mb-4">Why Transfer?</h3>
-          <div className="space-y-3">
-            <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full bg-green-400 mt-1.5"></div>
-              <div>
-                <p className="text-white font-medium text-sm">Double Rewards</p>
-                <p className="text-slate-400 text-xs">Both parties earn on every transaction</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full bg-blue-400 mt-1.5"></div>
-              <div>
-                <p className="text-white font-medium text-sm">Instant Settlement</p>
-                <p className="text-slate-400 text-xs">Fast on-chain transfers</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full bg-purple-400 mt-1.5"></div>
-              <div>
-                <p className="text-white font-medium text-sm">No Fees</p>
-                <p className="text-slate-400 text-xs">Only gas costs, no protocol fees</p>
-              </div>
             </div>
           </div>
         </div>
@@ -265,6 +288,53 @@ export default function TransferUSDCB() {
               <span className="text-green-400 font-medium">+26.17 SB</span>
             </div>
           </div>
+        </div>
+      </div>
+      </div>
+
+      {/* Transfer History Table */}
+      <div className="glass-card p-6">
+        <h2 className="text-2xl font-bold text-white mb-6">Transfer History</h2>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-slate-700">
+                <th className="text-left py-3 px-4 text-sm font-medium text-slate-400">Amount Transfer</th>
+                <th className="text-left py-3 px-4 text-sm font-medium text-slate-400">From</th>
+                <th className="text-left py-3 px-4 text-sm font-medium text-slate-400">To</th>
+                <th className="text-left py-3 px-4 text-sm font-medium text-slate-400">Time</th>
+                <th className="text-left py-3 px-4 text-sm font-medium text-slate-400">Your Reward</th>
+                <th className="text-left py-3 px-4 text-sm font-medium text-slate-400">Receiver Reward</th>
+              </tr>
+            </thead>
+            <tbody>
+              {transferHistory.map((transfer, index) => (
+                <tr key={index} className="border-b border-slate-800 hover:bg-slate-800/30 transition-colors">
+                  <td className="py-4 px-4">
+                    <div className="flex items-center gap-2">
+                      <span className="text-white font-medium">{transfer.amount}</span>
+                      <span className="text-slate-400 text-sm">USDC-B</span>
+                    </div>
+                  </td>
+                  <td className="py-4 px-4">
+                    <span className="text-white font-mono text-sm">{transfer.from}</span>
+                  </td>
+                  <td className="py-4 px-4">
+                    <span className="text-white font-mono text-sm">{transfer.to}</span>
+                  </td>
+                  <td className="py-4 px-4">
+                    <span className="text-slate-400 text-sm">{formatDateTime(transfer.timestamp)}</span>
+                  </td>
+                  <td className="py-4 px-4">
+                    <span className="text-green-400 font-medium">+{transfer.senderReward}</span>
+                  </td>
+                  <td className="py-4 px-4">
+                    <span className="text-green-400 font-medium">+{transfer.receiverReward}</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
