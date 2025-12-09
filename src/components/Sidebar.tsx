@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, ArrowLeftRight, TrendingUp, Vault, Menu, X } from 'lucide-react';
+import { Home, ArrowLeftRight, TrendingUp, Vault, Menu, X, Coins } from 'lucide-react';
 import { WalletConnect } from './WalletConnect';
 
 export default function Sidebar() {
@@ -12,6 +12,7 @@ export default function Sidebar() {
 
   const menuItems = [
     { icon: Home, label: 'Dashboard', href: '/' },
+    { icon: Coins, label: 'Mint', href: '/mint' },
     { icon: ArrowLeftRight, label: 'Transfer', href: '/transfer' },
     { icon: TrendingUp, label: 'Yield Bonds', href: '/stream-bonds' },
     { icon: Vault, label: 'Treasury', href: '/treasury' },
