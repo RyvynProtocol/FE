@@ -32,7 +32,7 @@ export function WalletConnect() {
     return (
       <button
         disabled
-        className="px-4 py-2 bg-gray-600 text-white rounded-lg cursor-not-allowed flex items-center justify-center"
+        className="flex cursor-not-allowed items-center justify-center rounded-lg bg-gray-600 px-4 py-2 text-white"
       >
         Loading...
       </button>
@@ -42,14 +42,14 @@ export function WalletConnect() {
   if (authenticated && connectedWallet) {
     return (
       <div className="flex items-center gap-3">
-        <div className="px-4 py-2 bg-indigo-600/20 border border-indigo-500/30 rounded-lg">
-          <span className="text-indigo-300 font-mono text-sm">
+        <div className="rounded-lg border border-indigo-500/30 bg-indigo-600/20 px-4 py-2">
+          <span className="font-mono text-sm text-indigo-300">
             {formatAddress(connectedWallet.address)}
           </span>
         </div>
         <button
           onClick={handleLogout}
-          className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors flex items-center justify-center"
+          className="flex items-center justify-center rounded-lg bg-red-600 px-4 py-2 text-white transition-colors hover:bg-red-700"
         >
           Disconnect
         </button>
@@ -60,7 +60,7 @@ export function WalletConnect() {
   return (
     <button
       onClick={handleLogin}
-      className="w-full px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors font-medium flex items-center justify-center"
+      className="flex w-full items-center justify-center rounded-lg bg-indigo-600 px-6 py-2 font-medium text-white transition-colors hover:bg-indigo-700"
     >
       Connect Wallet
     </button>
