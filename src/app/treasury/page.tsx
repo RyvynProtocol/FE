@@ -2,7 +2,10 @@
 
 import React from 'react';
 import Sidebar from '@/components/Sidebar';
-import { Vault, TrendingUp, Shield, DollarSign, PieChart, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { Vault, TrendingUp, Shield, DollarSign, PieChart, ArrowUpRight } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
 
 export default function TreasuryPage() {
   return (
@@ -20,69 +23,78 @@ export default function TreasuryPage() {
 
           {/* Top Stats */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div className="glass-card p-6">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
-                  <DollarSign className="w-5 h-5 text-blue-400" />
+            <Card className="glass-card border-none bg-slate-900/40">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                    <DollarSign className="w-5 h-5 text-blue-400" />
+                  </div>
+                  <p className="text-slate-400 text-sm">Total Value</p>
                 </div>
-                <p className="text-slate-400 text-sm">Total Value</p>
-              </div>
-              <p className="text-3xl font-bold text-white mb-1">$10.2M</p>
-              <div className="flex items-center gap-1 text-green-400 text-sm">
-                <ArrowUpRight className="w-4 h-4" />
-                <span>+5.2% this month</span>
-              </div>
-            </div>
+                <p className="text-3xl font-bold text-white mb-1">$10.2M</p>
+                <div className="flex items-center gap-1 text-green-400 text-sm">
+                  <ArrowUpRight className="w-4 h-4" />
+                  <span>+5.2% this month</span>
+                </div>
+              </CardContent>
+            </Card>
 
-            <div className="glass-card p-6">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
-                  <TrendingUp className="w-5 h-5 text-purple-400" />
+            <Card className="glass-card border-none bg-slate-900/40">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                    <TrendingUp className="w-5 h-5 text-purple-400" />
+                  </div>
+                  <p className="text-slate-400 text-sm">Current Yield</p>
                 </div>
-                <p className="text-slate-400 text-sm">Current Yield</p>
-              </div>
-              <p className="text-3xl font-bold text-white mb-1">10.2%</p>
-              <div className="flex items-center gap-1 text-green-400 text-sm">
-                <ArrowUpRight className="w-4 h-4" />
-                <span>APY</span>
-              </div>
-            </div>
+                <p className="text-3xl font-bold text-white mb-1">10.2%</p>
+                <div className="flex items-center gap-1 text-green-400 text-sm">
+                  <ArrowUpRight className="w-4 h-4" />
+                  <span>APY</span>
+                </div>
+              </CardContent>
+            </Card>
 
-            <div className="glass-card p-6">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
-                  <Shield className="w-5 h-5 text-green-400" />
+            <Card className="glass-card border-none bg-slate-900/40">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
+                    <Shield className="w-5 h-5 text-green-400" />
+                  </div>
+                  <p className="text-slate-400 text-sm">Collateral Ratio</p>
                 </div>
-                <p className="text-slate-400 text-sm">Collateral Ratio</p>
-              </div>
-              <p className="text-3xl font-bold text-white mb-1">105%</p>
-              <div className="flex items-center gap-1 text-green-400 text-sm">
-                <span>Over-collateralized</span>
-              </div>
-            </div>
+                <p className="text-3xl font-bold text-white mb-1">105%</p>
+                <div className="flex items-center gap-1 text-green-400 text-sm">
+                  <span>Over-collateralized</span>
+                </div>
+              </CardContent>
+            </Card>
 
-            <div className="glass-card p-6">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center">
-                  <PieChart className="w-5 h-5 text-orange-400" />
+            <Card className="glass-card border-none bg-slate-900/40">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center">
+                    <PieChart className="w-5 h-5 text-orange-400" />
+                  </div>
+                  <p className="text-slate-400 text-sm">USDC-B Supply</p>
                 </div>
-                <p className="text-slate-400 text-sm">USDC-B Supply</p>
-              </div>
-              <p className="text-3xl font-bold text-white mb-1">$9.7M</p>
-              <div className="flex items-center gap-1 text-slate-400 text-sm">
-                <span>In circulation</span>
-              </div>
-            </div>
+                <p className="text-3xl font-bold text-white mb-1">$9.7M</p>
+                <div className="flex items-center gap-1 text-slate-400 text-sm">
+                  <span>In circulation</span>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Asset Allocation */}
             <div className="lg:col-span-2 space-y-6">
               {/* Allocation Breakdown */}
-              <div className="glass-card p-6">
-                <h2 className="text-2xl font-bold text-white mb-6">Asset Allocation</h2>
-
-                <div className="space-y-6">
+              <Card className="glass-card border-none bg-slate-900/40">
+                <CardHeader>
+                  <CardTitle className="text-2xl font-bold text-white">Asset Allocation</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
                   {/* US T-Bills */}
                   <div className="bg-slate-800/30 rounded-xl p-4 border border-slate-700/30">
                     <div className="flex justify-between items-start mb-3">
@@ -100,9 +112,7 @@ export default function TreasuryPage() {
                         <p className="text-slate-400 text-sm">$6.12M</p>
                       </div>
                     </div>
-                    <div className="w-full bg-slate-700/50 rounded-full h-3 mb-2">
-                      <div className="bg-gradient-to-r from-blue-500 to-blue-600 h-3 rounded-full" style={{width: '60%'}}></div>
-                    </div>
+                    <Progress value={60} className="h-3 mb-2" />
                     <div className="flex justify-between items-center text-sm">
                       <span className="text-slate-400">Current Yield</span>
                       <span className="text-green-400 font-medium">4.5% APY</span>
@@ -126,9 +136,7 @@ export default function TreasuryPage() {
                         <p className="text-slate-400 text-sm">$2.55M</p>
                       </div>
                     </div>
-                    <div className="w-full bg-slate-700/50 rounded-full h-3 mb-2">
-                      <div className="bg-gradient-to-r from-purple-500 to-purple-600 h-3 rounded-full" style={{width: '25%'}}></div>
-                    </div>
+                    <Progress value={25} className="h-3 mb-2" />
                     <div className="flex justify-between items-center text-sm">
                       <span className="text-slate-400">Current Yield</span>
                       <span className="text-green-400 font-medium">6.8% APY</span>
@@ -152,9 +160,7 @@ export default function TreasuryPage() {
                         <p className="text-slate-400 text-sm">$1.02M</p>
                       </div>
                     </div>
-                    <div className="w-full bg-slate-700/50 rounded-full h-3 mb-2">
-                      <div className="bg-gradient-to-r from-green-500 to-green-600 h-3 rounded-full" style={{width: '10%'}}></div>
-                    </div>
+                    <Progress value={10} className="h-3 mb-2" />
                     <div className="flex justify-between items-center text-sm">
                       <span className="text-slate-400">Available for Withdrawal</span>
                       <span className="text-green-400 font-medium">100%</span>
@@ -178,35 +184,41 @@ export default function TreasuryPage() {
                         <p className="text-slate-400 text-sm">$510K</p>
                       </div>
                     </div>
-                    <div className="w-full bg-slate-700/50 rounded-full h-3 mb-2">
-                      <div className="bg-gradient-to-r from-orange-500 to-orange-600 h-3 rounded-full" style={{width: '5%'}}></div>
-                    </div>
+                    <Progress value={5} className="h-3 mb-2" />
                     <div className="flex justify-between items-center text-sm">
                       <span className="text-slate-400">Reserved for Safety</span>
                       <span className="text-green-400 font-medium">Locked</span>
                     </div>
                   </div>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
 
               {/* Performance Chart Placeholder */}
-              <div className="glass-card p-6">
-                <h2 className="text-xl font-bold text-white mb-4">Treasury Performance</h2>
-                <div className="bg-slate-800/30 rounded-xl p-8 border border-slate-700/30 flex items-center justify-center h-64">
-                  <p className="text-slate-400">Chart coming soon</p>
-                </div>
-              </div>
+              <Card className="glass-card border-none bg-slate-900/40">
+                <CardHeader>
+                  <CardTitle className="text-xl font-bold text-white">
+                    Treasury Performance
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="bg-slate-800/30 rounded-xl p-8 border border-slate-700/30 flex items-center justify-center h-64">
+                    <p className="text-slate-400">Chart coming soon</p>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
 
             {/* Right Column - Info */}
             <div className="space-y-6">
               {/* Treasury Security */}
-              <div className="glass-card p-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <Shield className="w-5 h-5 text-green-400" />
-                  <h3 className="text-lg font-bold text-white">Security</h3>
-                </div>
-                <div className="space-y-3 text-sm">
+              <Card className="glass-card border-none bg-slate-900/40">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-lg font-bold text-white">
+                    <Shield className="w-5 h-5 text-green-400" />
+                    Security
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3 text-sm">
                   <div className="flex items-start gap-3">
                     <div className="w-2 h-2 rounded-full bg-green-400 mt-1.5"></div>
                     <div>
@@ -227,44 +239,43 @@ export default function TreasuryPage() {
                       <p className="text-white font-medium">Insurance Coverage</p>
                       <p className="text-slate-400 text-xs">$5M protocol insurance</p>
                     </div>
+                    ```
                   </div>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
 
               {/* Yield Distribution */}
-              <div className="glass-card p-6">
-                <h3 className="text-lg font-bold text-white mb-4">Yield Distribution</h3>
-                <div className="space-y-3">
+              <Card className="glass-card border-none bg-slate-900/40">
+                <CardHeader>
+                  <CardTitle className="text-lg font-bold text-white">Yield Distribution</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
                   <div className="flex justify-between items-center">
                     <span className="text-slate-400 text-sm">To Yield Bond Holders</span>
                     <span className="text-white font-medium">85%</span>
                   </div>
-                  <div className="w-full bg-slate-700/50 rounded-full h-2">
-                    <div className="bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-full" style={{width: '85%'}}></div>
-                  </div>
+                  <Progress value={85} className="h-2 bg-slate-700/50" />
 
                   <div className="flex justify-between items-center pt-2">
                     <span className="text-slate-400 text-sm">Protocol Operations</span>
                     <span className="text-white font-medium">10%</span>
                   </div>
-                  <div className="w-full bg-slate-700/50 rounded-full h-2">
-                    <div className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full" style={{width: '10%'}}></div>
-                  </div>
+                  <Progress value={10} className="h-2 bg-slate-700/50" />
 
                   <div className="flex justify-between items-center pt-2">
                     <span className="text-slate-400 text-sm">Reserve Fund</span>
                     <span className="text-white font-medium">5%</span>
                   </div>
-                  <div className="w-full bg-slate-700/50 rounded-full h-2">
-                    <div className="bg-gradient-to-r from-orange-500 to-orange-600 h-2 rounded-full" style={{width: '5%'}}></div>
-                  </div>
-                </div>
-              </div>
+                  <Progress value={5} className="h-2 bg-slate-700/50" />
+                </CardContent>
+              </Card>
 
               {/* Monthly Stats */}
-              <div className="glass-card p-6">
-                <h3 className="text-lg font-bold text-white mb-4">This Month</h3>
-                <div className="space-y-3">
+              <Card className="glass-card border-none bg-slate-900/40">
+                <CardHeader>
+                  <CardTitle className="text-lg font-bold text-white">This Month</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
                   <div className="flex justify-between items-center">
                     <span className="text-slate-400 text-sm">Total Yields Generated</span>
                     <span className="text-green-400 font-medium">$87,234</span>
@@ -281,24 +292,35 @@ export default function TreasuryPage() {
                     <span className="text-slate-400 text-sm">Redemptions</span>
                     <span className="text-white font-medium">$340K</span>
                   </div>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
 
               {/* Transparency */}
-              <div className="glass-card p-6">
-                <h3 className="text-lg font-bold text-white mb-4">Transparency</h3>
-                <div className="space-y-2">
-                  <button className="w-full px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-lg transition-colors text-sm font-medium">
+              <Card className="glass-card border-none bg-slate-900/40">
+                <CardHeader>
+                  <CardTitle className="text-lg font-bold text-white">Transparency</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-center bg-blue-500/20 hover:bg-blue-500/30 text-blue-400"
+                  >
                     View Contract
-                  </button>
-                  <button className="w-full px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 rounded-lg transition-colors text-sm font-medium">
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-center bg-purple-500/20 hover:bg-purple-500/30 text-purple-400"
+                  >
                     Audit Reports
-                  </button>
-                  <button className="w-full px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg transition-colors text-sm font-medium">
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-center bg-green-500/20 hover:bg-green-500/30 text-green-400"
+                  >
                     Treasury Wallet
-                  </button>
-                </div>
-              </div>
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </main>
