@@ -17,7 +17,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-export default function TransferUSDCB() {
+export default function TransferRyUSD() {
   const { authenticated } = usePrivy();
   const { wallets } = useWallets();
   const connectedWallet = wallets[0];

@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Home, ArrowLeftRight, TrendingUp, Vault, Menu, X, Coins } from 'lucide-react';
-import { WalletConnect } from './WalletConnect';
+import { WalletConnect } from './wallet-connect';
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -48,11 +48,7 @@ export default function Sidebar() {
         {/* Logo */}
         <div className="p-6 border-b border-slate-700/50">
           <div className="flex items-center gap-2">
-            <img
-              src="/logo.png"
-              alt="Ryvyn Logo"
-              className="w-16 h-16 object-contain"
-            />
+            <img src="/logo.png" alt="Ryvyn Logo" className="w-16 h-16 object-contain" />
             <div>
               <h1 className="text-xl font-bold text-white">Ryvyn</h1>
               <p className="text-xs text-slate-400">Yield-Backed Stablecoin</p>
@@ -71,9 +67,10 @@ export default function Sidebar() {
                 onClick={() => setIsOpen(false)}
                 className={`
                   flex items-center gap-3 px-4 py-3 rounded-lg transition-all group
-                  ${isActive
-                    ? 'bg-gradient-to-r from-blue-500/20 to-purple-600/20 border border-blue-500/30 text-white'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-800/50'
+                  ${
+                    isActive
+                      ? 'bg-gradient-to-r from-blue-500/20 to-purple-600/20 border border-blue-500/30 text-white'
+                      : 'text-slate-300 hover:text-white hover:bg-slate-800/50'
                   }
                 `}
               >

@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/table';
 import { Label } from '@/components/ui/label';
 
-export default function MintUSDCB() {
+export default function MintRyUSD() {
   const { authenticated } = usePrivy();
   const { wallets } = useWallets();
   const connectedWallet = wallets[0];
