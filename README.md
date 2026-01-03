@@ -45,6 +45,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## Design Philosophy
 
 The UI is inspired by Fluidity's clean and modern aesthetic:
+
 - Glass morphism effects
 - Gradient accents
 - Smooth animations
@@ -54,6 +55,7 @@ The UI is inspired by Fluidity's clean and modern aesthetic:
 ## Smart Contract Integration
 
 This is a UI-only implementation. To make it functional, integrate with:
+
 - USDC-B smart contract for token transfers
 - YieldTreasury contract for treasury data
 - StreamBond contract for bond management
