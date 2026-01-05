@@ -15,7 +15,7 @@ export function PageContainer({
       <div className="pointer-events-none fixed inset-0" />
       
       <div
-        className={cn("relative z-10 mx-auto px-3 md:px-6 pt-32 pb-12", className)}
+        className={cn("relative z-10 mx-auto px-3 md:px-9 pt-32 pb-12", className)}
         {...props}
       >
         {children}
