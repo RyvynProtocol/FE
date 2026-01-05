@@ -3,16 +3,37 @@ import TransferRyUSD from '@/features/transfer/components/transfer-ry-usd';
 
 export default function TransferPage() {
   return (
-    <PageContainer className="max-w-6xl">
-      <div className="mb-8">
-        <h1 className="mb-2 text-4xl font-bold text-white">
-          Transfer USDC-B
-        </h1>
-        <p className="text-slate-400">Transfer USDC-B tokens to earn rewards</p>
-      </div>
+    <PageContainer>
+      <div className="grid min-h-[calc(100vh-200px)] grid-cols-1 gap-12 lg:grid-cols-2">
+        {/* Left Column */}
+        <div className="flex flex-col justify-between py-8">
+          {/* Top: Header */}
+          <div>
+            <h1 className="text-2xl font-bold uppercase tracking-tighter sm:text-3xl">
+              Transfer USDC-B
+            </h1>
+          </div>
 
-      <TransferRyUSD />
+          {/* Bottom: Copywriting */}
+          <div className="mt-12 lg:mt-0">
+            <h2 className="text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
+              TRANSFER AND EARN <br className="hidden md:block" />
+              <span className="text-muted-foreground">REAL-WORLD YIELD.</span>
+            </h2>
+            <p className="mt-6 text-lg font-medium text-muted-foreground md:text-xl">
+              Transfer USDC-B instantly to anyone and earn Stream Bonds rewards
+              on every transaction.
+            </p>
+          </div>
+        </div>
+
+        {/* Right Column: Transfer Card */}
+        <div className="flex items-center justify-center lg:items-end lg:justify-end">
+          <div className="w-full max-w-md">
+            <TransferRyUSD />
+          </div>
+        </div>
+      </div>
     </PageContainer>
   );
 }
-
