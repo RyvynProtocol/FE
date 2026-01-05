@@ -1,10 +1,16 @@
-'use client';
-
 import { usePrivy, useWallets } from '@privy-io/react-auth';
 import { useEffect } from 'react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
+import { Loader2, LogOut, Wallet } from 'lucide-react';
 
 export function WalletConnect() {
-  const { ready, authenticated, login, logout, user } = usePrivy();
+  const { ready, authenticated, login, logout } = usePrivy();
   const { wallets } = useWallets();
 
   const connectedWallet = wallets[0];
@@ -30,39 +36,46 @@ export function WalletConnect() {
 
   if (!ready) {
     return (
-      <button
+      <Button
         disabled
-        className="flex cursor-not-allowed items-center justify-center rounded-lg bg-gray-600 px-4 py-2 text-white"
+        className="h-12 rounded-full px-6 text-base font-medium"
       >
+        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
         Loading...
-      </button>
+      </Button>
     );
   }
 
   if (authenticated && connectedWallet) {
     return (
-      <div className="flex items-center gap-3">
-        <div className="rounded-lg border border-indigo-500/30 bg-indigo-600/20 px-4 py-2">
-          <span className="font-mono text-sm text-indigo-300">
-            {formatAddress(connectedWallet.address)}
-          </span>
-        </div>
-        <button
-          onClick={handleLogout}
-          className="flex items-center justify-center rounded-lg bg-red-600 px-4 py-2 text-white transition-colors hover:bg-red-700"
-        >
-          Disconnect
-        </button>
-      </div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="secondary"
+            className="h-12 rounded-full border border-white/10 bg-white/10 px-6 text-base font-medium text-white hover:bg-white/20"
+          >
+            <Wallet className="mr-2 h-4 w-4" />
+            <span className="font-mono">
+              {formatAddress(connectedWallet.address)}
+            </span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-56">
+          <DropdownMenuItem onClick={handleLogout} className="text-red-600 focus:text-red-600">
+            <LogOut className="mr-2 h-4 w-4" />
+            <span>Disconnect</span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     );
   }
 
   return (
-    <button
+    <Button
       onClick={handleLogin}
-      className="flex w-full items-center justify-center rounded-lg bg-indigo-600 px-6 py-2 font-medium text-white transition-colors hover:bg-indigo-700"
+      className="h-12 rounded-2xl bg-secondary-foreground px-8 text-base font-semibold text-secondary transition-all hover:bg-secondary-foreground/90 hover:scale-105"
     >
       Connect Wallet
-    </button>
+    </Button>
   );
 }

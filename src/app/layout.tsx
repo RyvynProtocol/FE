@@ -3,6 +3,7 @@ import { PrivyProvider } from '@/providers/PrivyProvider';
 import type { Metadata } from 'next';
 import { Figtree } from 'next/font/google';
 import './globals.css';
+import Navbar from '@/components/navbar';
 
 const figtree = Figtree({
   subsets: ['latin'],
@@ -23,7 +24,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`antialiased ${figtree.className}`}>
-        <PrivyProvider>{children}</PrivyProvider>
+        <PrivyProvider>
+          <Navbar />
+          {children}
+        </PrivyProvider>
         <Toaster richColors />
       </body>
     </html>
