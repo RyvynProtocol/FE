@@ -1,9 +1,9 @@
+import Navbar from '@/components/navbar';
 import { Toaster } from '@/components/ui/sonner';
 import { PrivyProvider } from '@/providers/PrivyProvider';
 import type { Metadata } from 'next';
 import { Figtree } from 'next/font/google';
 import './globals.css';
-import Navbar from '@/components/navbar';
 
 const figtree = Figtree({
   subsets: ['latin'],

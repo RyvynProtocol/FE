@@ -3,12 +3,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import {
-    ArrowUpRight,
-    DollarSign,
-    PieChart,
-    Shield,
-    TrendingUp,
-    Vault,
+  ArrowUpRight,
+  DollarSign,
+  PieChart,
+  Shield,
+  TrendingUp,
+  Vault,
 } from 'lucide-react';
 
 export default function TreasuryPage() {
@@ -29,7 +29,7 @@ export default function TreasuryPage() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/10">
                 <DollarSign className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               </div>
-              <p className="text-sm text-muted-foreground">Total Value</p>
+              <p className="text-muted-foreground text-sm">Total Value</p>
             </div>
             <p className="mb-1 text-3xl font-bold">$10.2M</p>
             <div className="flex items-center gap-1 text-sm text-green-600 dark:text-green-400">
@@ -45,7 +45,7 @@ export default function TreasuryPage() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-500/10">
                 <TrendingUp className="h-5 w-5 text-purple-600 dark:text-purple-400" />
               </div>
-              <p className="text-sm text-muted-foreground">Current Yield</p>
+              <p className="text-muted-foreground text-sm">Current Yield</p>
             </div>
             <p className="mb-1 text-3xl font-bold">10.2%</p>
             <div className="flex items-center gap-1 text-sm text-green-600 dark:text-green-400">
@@ -61,7 +61,7 @@ export default function TreasuryPage() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-500/10">
                 <Shield className="h-5 w-5 text-green-600 dark:text-green-400" />
               </div>
-              <p className="text-sm text-muted-foreground">Collateral Ratio</p>
+              <p className="text-muted-foreground text-sm">Collateral Ratio</p>
             </div>
             <p className="mb-1 text-3xl font-bold">105%</p>
             <div className="flex items-center gap-1 text-sm text-green-600 dark:text-green-400">
@@ -76,10 +76,10 @@ export default function TreasuryPage() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-500/10">
                 <PieChart className="h-5 w-5 text-orange-600 dark:text-orange-400" />
               </div>
-              <p className="text-sm text-muted-foreground">USDC-B Supply</p>
+              <p className="text-muted-foreground text-sm">USDC-B Supply</p>
             </div>
             <p className="mb-1 text-3xl font-bold">$9.7M</p>
-            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+            <div className="text-muted-foreground flex items-center gap-1 text-sm">
               <span>In circulation</span>
             </div>
           </CardContent>
@@ -98,7 +98,7 @@ export default function TreasuryPage() {
             </CardHeader>
             <CardContent className="space-y-6">
               {/* US T-Bills */}
-              <div className="rounded-xl border bg-muted/50 p-4">
+              <div className="bg-muted/50 rounded-xl border p-4">
                 <div className="mb-3 flex items-start justify-between">
                   <div className="flex items-center gap-3">
                     <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-500/10">
@@ -106,14 +106,14 @@ export default function TreasuryPage() {
                     </div>
                     <div>
                       <p className="text-lg font-bold">US T-Bills (ONDO)</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-muted-foreground text-sm">
                         United States Treasury Bills
                       </p>
                     </div>
                   </div>
                   <div className="text-right">
                     <p className="text-xl font-bold">60%</p>
-                    <p className="text-sm text-muted-foreground">$6.12M</p>
+                    <p className="text-muted-foreground text-sm">$6.12M</p>
                   </div>
                 </div>
                 <Progress value={60} className="mb-2 h-3" />
@@ -126,7 +126,7 @@ export default function TreasuryPage() {
               </div>
 
               {/* Corporate Bonds */}
-              <div className="rounded-xl border bg-muted/50 p-4">
+              <div className="bg-muted/50 rounded-xl border p-4">
                 <div className="mb-3 flex items-start justify-between">
                   <div className="flex items-center gap-3">
                     <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-500/10">
@@ -134,14 +134,14 @@ export default function TreasuryPage() {
                     </div>
                     <div>
                       <p className="text-lg font-bold">Corporate Bonds</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-muted-foreground text-sm">
                         Investment-grade corporate debt
                       </p>
                     </div>
                   </div>
                   <div className="text-right">
                     <p className="text-xl font-bold">25%</p>
-                    <p className="text-sm text-muted-foreground">$2.55M</p>
+                    <p className="text-muted-foreground text-sm">$2.55M</p>
                   </div>
                 </div>
                 <Progress value={25} className="mb-2 h-3" />
@@ -154,7 +154,7 @@ export default function TreasuryPage() {
               </div>
 
               {/* USDC Buffer */}
-              <div className="rounded-xl border bg-muted/50 p-4">
+              <div className="bg-muted/50 rounded-xl border p-4">
                 <div className="mb-3 flex items-start justify-between">
                   <div className="flex items-center gap-3">
                     <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-500/10">
@@ -162,14 +162,14 @@ export default function TreasuryPage() {
                     </div>
                     <div>
                       <p className="text-lg font-bold">USDC Liquid Buffer</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-muted-foreground text-sm">
                         For instant redemptions
                       </p>
                     </div>
                   </div>
                   <div className="text-right">
                     <p className="text-xl font-bold">10%</p>
-                    <p className="text-sm text-muted-foreground">$1.02M</p>
+                    <p className="text-muted-foreground text-sm">$1.02M</p>
                   </div>
                 </div>
                 <Progress value={10} className="mb-2 h-3" />
@@ -184,7 +184,7 @@ export default function TreasuryPage() {
               </div>
 
               {/* Protocol Reserve */}
-              <div className="rounded-xl border bg-muted/50 p-4">
+              <div className="bg-muted/50 rounded-xl border p-4">
                 <div className="mb-3 flex items-start justify-between">
                   <div className="flex items-center gap-3">
                     <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-orange-500/10">
@@ -192,14 +192,14 @@ export default function TreasuryPage() {
                     </div>
                     <div>
                       <p className="text-lg font-bold">Protocol Reserve</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-muted-foreground text-sm">
                         Emergency fund & insurance
                       </p>
                     </div>
                   </div>
                   <div className="text-right">
                     <p className="text-xl font-bold">5%</p>
-                    <p className="text-sm text-muted-foreground">$510K</p>
+                    <p className="text-muted-foreground text-sm">$510K</p>
                   </div>
                 </div>
                 <Progress value={5} className="mb-2 h-3" />
@@ -223,7 +223,7 @@ export default function TreasuryPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex h-64 items-center justify-center rounded-xl border bg-muted/50 p-8">
+              <div className="bg-muted/50 flex h-64 items-center justify-center rounded-xl border p-8">
                 <p className="text-muted-foreground">Chart coming soon</p>
               </div>
             </CardContent>
@@ -245,7 +245,7 @@ export default function TreasuryPage() {
                 <div className="mt-1.5 h-2 w-2 rounded-full bg-green-500"></div>
                 <div>
                   <p className="font-medium">Multi-sig Wallet</p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-muted-foreground text-xs">
                     3/5 signature requirement
                   </p>
                 </div>
@@ -254,7 +254,7 @@ export default function TreasuryPage() {
                 <div className="mt-1.5 h-2 w-2 rounded-full bg-blue-500"></div>
                 <div>
                   <p className="font-medium">Audited Contracts</p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-muted-foreground text-xs">
                     By leading security firms
                   </p>
                 </div>
@@ -263,7 +263,7 @@ export default function TreasuryPage() {
                 <div className="mt-1.5 h-2 w-2 rounded-full bg-purple-500"></div>
                 <div>
                   <p className="font-medium">Insurance Coverage</p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-muted-foreground text-xs">
                     $5M protocol insurance
                   </p>
                 </div>
@@ -280,7 +280,7 @@ export default function TreasuryPage() {
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">
+                <span className="text-muted-foreground text-sm">
                   To Yield Bond Holders
                 </span>
                 <span className="font-medium">85%</span>
@@ -288,7 +288,7 @@ export default function TreasuryPage() {
               <Progress value={85} className="h-2" />
 
               <div className="flex items-center justify-between pt-2">
-                <span className="text-sm text-muted-foreground">
+                <span className="text-muted-foreground text-sm">
                   Protocol Operations
                 </span>
                 <span className="font-medium">10%</span>
@@ -296,7 +296,7 @@ export default function TreasuryPage() {
               <Progress value={10} className="h-2" />
 
               <div className="flex items-center justify-between pt-2">
-                <span className="text-sm text-muted-foreground">
+                <span className="text-muted-foreground text-sm">
                   Reserve Fund
                 </span>
                 <span className="font-medium">5%</span>
@@ -312,7 +312,7 @@ export default function TreasuryPage() {
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">
+                <span className="text-muted-foreground text-sm">
                   Total Yields Generated
                 </span>
                 <span className="font-medium text-green-600 dark:text-green-400">
@@ -320,19 +320,19 @@ export default function TreasuryPage() {
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">
+                <span className="text-muted-foreground text-sm">
                   Distributed to Users
                 </span>
                 <span className="font-medium">$74,148</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">
+                <span className="text-muted-foreground text-sm">
                   New USDC-B Minted
                 </span>
                 <span className="font-medium">$1.2M</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">
+                <span className="text-muted-foreground text-sm">
                   Redemptions
                 </span>
                 <span className="font-medium">$340K</span>

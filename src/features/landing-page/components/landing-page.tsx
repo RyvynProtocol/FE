@@ -7,9 +7,9 @@ export default function LandingPage() {
         <h1 className="mb-4 text-5xl font-bold tracking-tight md:text-6xl">
           Welcome to USDC-B
         </h1>
-        <p className="mx-auto max-w-2xl text-xl text-muted-foreground">
-          The first stablecoin that rewards every transaction with
-          real-world asset-backed yields
+        <p className="text-muted-foreground mx-auto max-w-2xl text-xl">
+          The first stablecoin that rewards every transaction with real-world
+          asset-backed yields
         </p>
       </div>
     </PageContainer>

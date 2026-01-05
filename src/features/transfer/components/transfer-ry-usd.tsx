@@ -1,12 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -36,8 +31,6 @@ export default function TransferRyUSD() {
   const totalReward = amount ? parseFloat(amount) * 0.01 : 0; // 1% total reward
   const senderReward = (totalReward * 0.7).toFixed(4); // 70% for sender
   const receiverReward = (totalReward * 0.3).toFixed(4); // 30% for receiver
-
-
 
   const handleTransfer = async () => {
     if (!authenticated || !connectedWallet) {
@@ -91,25 +84,23 @@ export default function TransferRyUSD() {
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Balance Display */}
-          <div className="rounded-xl border bg-muted/50 p-4">
+          <div className="bg-muted/50 rounded-xl border p-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">
+              <span className="text-muted-foreground text-sm">
                 Your USDC-B Balance
               </span>
               <div className="flex items-center gap-2">
-                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+                <div className="bg-primary text-primary-foreground flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold">
                   B
                 </div>
-                <span className="text-lg font-bold">
-                  {userUSDCBBalance}
-                </span>
+                <span className="text-lg font-bold">{userUSDCBBalance}</span>
               </div>
             </div>
           </div>
 
           {/* Recipient Address */}
           <div className="rounded-xl border p-4">
-            <Label className="mb-2 block text-sm text-muted-foreground">
+            <Label className="text-muted-foreground mb-2 block text-sm">
               Recipient Address
             </Label>
             <Input
@@ -117,7 +108,7 @@ export default function TransferRyUSD() {
               value={recipient}
               onChange={e => setRecipient(e.target.value)}
               placeholder="0x..."
-              className="h-auto border-none bg-transparent px-0 font-mono placeholder:text-muted-foreground focus-visible:ring-0 shadow-none"
+              className="placeholder:text-muted-foreground h-auto border-none bg-transparent px-0 font-mono shadow-none focus-visible:ring-0"
               disabled={!authenticated}
             />
           </div>
@@ -125,12 +116,12 @@ export default function TransferRyUSD() {
           {/* Amount Input */}
           <div className="rounded-xl border p-4">
             <div className="mb-2 flex items-center justify-between">
-              <Label className="text-sm text-muted-foreground">Amount</Label>
+              <Label className="text-muted-foreground text-sm">Amount</Label>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleMaxClick}
-                className="h-8 text-primary hover:text-primary/80"
+                className="text-primary hover:text-primary/80 h-8"
                 disabled={!authenticated}
               >
                 MAX
@@ -142,11 +133,11 @@ export default function TransferRyUSD() {
                 value={amount}
                 onChange={e => setAmount(e.target.value)}
                 placeholder="0.00"
-                className="h-auto flex-1 border-none bg-transparent px-0 text-3xl shadow-none [appearance:textfield] placeholder:text-muted-foreground focus-visible:ring-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                className="placeholder:text-muted-foreground h-auto flex-1 [appearance:textfield] border-none bg-transparent px-0 text-3xl shadow-none focus-visible:ring-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 disabled={!authenticated}
               />
-              <div className="flex items-center gap-2 rounded-lg bg-muted px-3 py-2">
-                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+              <div className="bg-muted flex items-center gap-2 rounded-lg px-3 py-2">
+                <div className="bg-primary text-primary-foreground flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold">
                   B
                 </div>
                 <span className="font-medium">USDC-B</span>
@@ -156,7 +147,7 @@ export default function TransferRyUSD() {
 
           {/* Transaction Details */}
           {amount && parseFloat(amount) > 0 && (
-            <div className="space-y-2 rounded-lg border bg-muted/50 p-4">
+            <div className="bg-muted/50 space-y-2 rounded-lg border p-4">
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Estimated Gas</span>
                 <span>{estimatedGas} ETH</span>
@@ -164,12 +155,15 @@ export default function TransferRyUSD() {
               <div className="flex justify-between text-sm">
                 <TooltipProvider>
                   <Tooltip>
-                    <TooltipTrigger className="flex cursor-pointer items-center gap-1 text-muted-foreground decoration-dotted underline-offset-2 hover:underline">
+                    <TooltipTrigger className="text-muted-foreground flex cursor-pointer items-center gap-1 decoration-dotted underline-offset-2 hover:underline">
                       Your Reward (Sender)
                       <Info className="h-3 w-3" />
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>You earn 70% of the Stream Bonds rewards generated by this transfer.</p>
+                      <p>
+                        You earn 70% of the Stream Bonds rewards generated by
+                        this transfer.
+                      </p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -180,12 +174,14 @@ export default function TransferRyUSD() {
               <div className="flex justify-between text-sm">
                 <TooltipProvider>
                   <Tooltip>
-                    <TooltipTrigger className="flex cursor-pointer items-center gap-1 text-muted-foreground decoration-dotted underline-offset-2 hover:underline">
+                    <TooltipTrigger className="text-muted-foreground flex cursor-pointer items-center gap-1 decoration-dotted underline-offset-2 hover:underline">
                       Recipient Reward
                       <Info className="h-3 w-3" />
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>The recipient earns 30% of the Stream Bonds rewards.</p>
+                      <p>
+                        The recipient earns 30% of the Stream Bonds rewards.
+                      </p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -194,21 +190,19 @@ export default function TransferRyUSD() {
                 </span>
               </div>
               <div className="flex justify-between border-t pt-2 text-sm">
-                <span className="font-medium text-muted-foreground">
+                <span className="text-muted-foreground font-medium">
                   Recipient Receives
                 </span>
-                <span className="font-medium">
-                  {amount} USDC-B
-                </span>
+                <span className="font-medium">{amount} USDC-B</span>
               </div>
             </div>
           )}
 
           {/* Info Box */}
-          <div className="rounded-lg border bg-muted/50 p-3">
+          <div className="bg-muted/50 rounded-lg border p-3">
             <div className="flex gap-2">
-              <Info className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">
+              <Info className="text-muted-foreground mt-0.5 h-5 w-5 shrink-0" />
+              <p className="text-muted-foreground text-sm">
                 Both you and the recipient will earn Stream Bonds rewards on
                 this transfer!
               </p>

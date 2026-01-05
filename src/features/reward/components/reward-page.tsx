@@ -1,12 +1,7 @@
 import { PageContainer } from '@/components/page-container';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Shield, TrendingUp } from 'lucide-react';
 
@@ -38,34 +33,34 @@ export default function RewardPage() {
             </CardHeader>
             <CardContent>
               <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
-                <div className="rounded-xl border bg-muted/50 p-4">
-                  <p className="mb-1 text-sm text-muted-foreground">
+                <div className="bg-muted/50 rounded-xl border p-4">
+                  <p className="text-muted-foreground mb-1 text-sm">
                     Total Value
                   </p>
                   <p className="text-3xl font-bold">464.80</p>
-                  <p className="mt-1 text-xs text-muted-foreground">
+                  <p className="text-muted-foreground mt-1 text-xs">
                     USDC equivalent
                   </p>
                 </div>
-                <div className="rounded-xl border bg-muted/50 p-4">
-                  <p className="mb-1 text-sm text-muted-foreground">
+                <div className="bg-muted/50 rounded-xl border p-4">
+                  <p className="text-muted-foreground mb-1 text-sm">
                     Earning Now
                   </p>
                   <p className="text-3xl font-bold text-green-600 dark:text-green-400">
                     8.13
                   </p>
-                  <p className="mt-1 text-xs text-muted-foreground">
+                  <p className="text-muted-foreground mt-1 text-xs">
                     Streaming yield
                   </p>
                 </div>
-                <div className="rounded-xl border bg-muted/50 p-4">
-                  <p className="mb-1 text-sm text-muted-foreground">
+                <div className="bg-muted/50 rounded-xl border p-4">
+                  <p className="text-muted-foreground mb-1 text-sm">
                     Current APY
                   </p>
                   <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
                     10.2%
                   </p>
-                  <p className="mt-1 text-xs text-muted-foreground">
+                  <p className="text-muted-foreground mt-1 text-xs">
                     From RWA yields
                   </p>
                 </div>
@@ -76,15 +71,15 @@ export default function RewardPage() {
                 <h3 className="mb-4 text-lg font-bold">Active Bonds</h3>
 
                 {/* Bond #1 */}
-                <div className="rounded-xl border bg-card p-4 transition-colors hover:border-primary/50">
+                <div className="bg-card hover:border-primary/50 rounded-xl border p-4 transition-colors">
                   <div className="mb-2 flex items-start justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                        <TrendingUp className="h-5 w-5 text-primary" />
+                      <div className="bg-primary/10 flex h-10 w-10 items-center justify-center rounded-lg">
+                        <TrendingUp className="text-primary h-5 w-5" />
                       </div>
                       <div>
                         <p className="font-medium">Yield Bond #1</p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-muted-foreground text-xs">
                           Since 2024-11-15
                         </p>
                       </div>
@@ -97,13 +92,13 @@ export default function RewardPage() {
                     </div>
                   </div>
                   <div className="flex items-center justify-between border-t pt-2">
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-muted-foreground text-xs">
                       Streaming at 10.2% APY
                     </p>
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-7 text-xs text-primary hover:text-primary/80"
+                      className="text-primary hover:text-primary/80 h-7 text-xs"
                     >
                       Claim
                     </Button>
@@ -111,15 +106,15 @@ export default function RewardPage() {
                 </div>
 
                 {/* Bond #2 */}
-                <div className="rounded-xl border bg-card p-4 transition-colors hover:border-primary/50">
+                <div className="bg-card hover:border-primary/50 rounded-xl border p-4 transition-colors">
                   <div className="mb-2 flex items-start justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                        <TrendingUp className="h-5 w-5 text-primary" />
+                      <div className="bg-primary/10 flex h-10 w-10 items-center justify-center rounded-lg">
+                        <TrendingUp className="text-primary h-5 w-5" />
                       </div>
                       <div>
                         <p className="font-medium">Yield Bond #2</p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-muted-foreground text-xs">
                           Since 2024-11-20
                         </p>
                       </div>
@@ -132,13 +127,13 @@ export default function RewardPage() {
                     </div>
                   </div>
                   <div className="flex items-center justify-between border-t pt-2">
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-muted-foreground text-xs">
                       Streaming at 10.2% APY
                     </p>
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-7 text-xs text-primary hover:text-primary/80"
+                      className="text-primary hover:text-primary/80 h-7 text-xs"
                     >
                       Claim
                     </Button>
@@ -146,15 +141,15 @@ export default function RewardPage() {
                 </div>
 
                 {/* Bond #3 */}
-                <div className="rounded-xl border bg-card p-4 transition-colors hover:border-primary/50">
+                <div className="bg-card hover:border-primary/50 rounded-xl border p-4 transition-colors">
                   <div className="mb-2 flex items-start justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                        <TrendingUp className="h-5 w-5 text-primary" />
+                      <div className="bg-primary/10 flex h-10 w-10 items-center justify-center rounded-lg">
+                        <TrendingUp className="text-primary h-5 w-5" />
                       </div>
                       <div>
                         <p className="font-medium">Yield Bond #3</p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-muted-foreground text-xs">
                           Since 2024-11-25
                         </p>
                       </div>
@@ -167,13 +162,13 @@ export default function RewardPage() {
                     </div>
                   </div>
                   <div className="flex items-center justify-between border-t pt-2">
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-muted-foreground text-xs">
                       Streaming at 10.2% APY
                     </p>
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-7 text-xs text-primary hover:text-primary/80"
+                      className="text-primary hover:text-primary/80 h-7 text-xs"
                     >
                       Claim
                     </Button>
@@ -190,18 +185,18 @@ export default function RewardPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg font-bold">
-                <Shield className="h-5 w-5 text-primary" />
+                <Shield className="text-primary h-5 w-5" />
                 Backed by RWA
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="mb-4 text-sm text-muted-foreground">
+              <p className="text-muted-foreground mb-4 text-sm">
                 Your yields are secured by real-world assets held in treasury
               </p>
 
               <div className="space-y-4">
                 {/* US T-Bills */}
-                <div className="rounded-lg border bg-muted/50 p-3">
+                <div className="bg-muted/50 rounded-lg border p-3">
                   <div className="mb-2 flex items-center justify-between">
                     <span className="text-sm font-medium">
                       US T-Bills (ONDO)
@@ -214,7 +209,7 @@ export default function RewardPage() {
                 </div>
 
                 {/* Corporate Bonds */}
-                <div className="rounded-lg border bg-muted/50 p-3">
+                <div className="bg-muted/50 rounded-lg border p-3">
                   <div className="mb-2 flex items-center justify-between">
                     <span className="text-sm font-medium">Corporate Bonds</span>
                     <span className="font-bold text-purple-600 dark:text-purple-400">
@@ -225,7 +220,7 @@ export default function RewardPage() {
                 </div>
 
                 {/* Liquid Buffer */}
-                <div className="rounded-lg border bg-muted/50 p-3">
+                <div className="bg-muted/50 rounded-lg border p-3">
                   <div className="mb-2 flex items-center justify-between">
                     <span className="text-sm font-medium">USDC Buffer</span>
                     <span className="font-bold text-green-600 dark:text-green-400">
@@ -233,13 +228,13 @@ export default function RewardPage() {
                     </span>
                   </div>
                   <Progress value={10} className="h-2" />
-                  <p className="mt-1 text-xs text-muted-foreground">
+                  <p className="text-muted-foreground mt-1 text-xs">
                     For redemptions
                   </p>
                 </div>
 
                 {/* Protocol Reserve */}
-                <div className="rounded-lg border bg-muted/50 p-3">
+                <div className="bg-muted/50 rounded-lg border p-3">
                   <div className="mb-2 flex items-center justify-between">
                     <span className="text-sm font-medium">
                       Protocol Reserve
@@ -263,7 +258,7 @@ export default function RewardPage() {
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
               <div className="flex gap-3">
-                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+                <div className="bg-primary/10 text-primary flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold">
                   1
                 </div>
                 <p className="text-muted-foreground">
@@ -271,7 +266,7 @@ export default function RewardPage() {
                 </p>
               </div>
               <div className="flex gap-3">
-                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+                <div className="bg-primary/10 text-primary flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold">
                   2
                 </div>
                 <p className="text-muted-foreground">
@@ -279,7 +274,7 @@ export default function RewardPage() {
                 </p>
               </div>
               <div className="flex gap-3">
-                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+                <div className="bg-primary/10 text-primary flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold">
                   3
                 </div>
                 <p className="text-muted-foreground">
@@ -298,19 +293,19 @@ export default function RewardPage() {
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">
+                <span className="text-muted-foreground text-sm">
                   Total Value
                 </span>
                 <span className="font-medium">$10.2M</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Avg Yield</span>
+                <span className="text-muted-foreground text-sm">Avg Yield</span>
                 <span className="font-medium text-green-600 dark:text-green-400">
                   10.2% APY
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">
+                <span className="text-muted-foreground text-sm">
                   Active Bonds
                 </span>
                 <span className="font-medium">1,234</span>

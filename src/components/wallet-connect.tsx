@@ -1,13 +1,13 @@
-import { usePrivy, useWallets } from '@privy-io/react-auth';
-import { useEffect } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
+import { usePrivy, useWallets } from '@privy-io/react-auth';
 import { Loader2, LogOut, Wallet } from 'lucide-react';
+import { useEffect } from 'react';
 
 export function WalletConnect() {
   const { ready, authenticated, login, logout } = usePrivy();
@@ -36,10 +36,7 @@ export function WalletConnect() {
 
   if (!ready) {
     return (
-      <Button
-        disabled
-        className="h-12 rounded-full px-6 text-base font-medium"
-      >
+      <Button disabled className="h-12 rounded-full px-6 text-base font-medium">
         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
         Loading...
       </Button>
@@ -61,7 +58,10 @@ export function WalletConnect() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-56">
-          <DropdownMenuItem onClick={handleLogout} className="text-red-600 focus:text-red-600">
+          <DropdownMenuItem
+            onClick={handleLogout}
+            className="text-red-600 focus:text-red-600"
+          >
             <LogOut className="mr-2 h-4 w-4" />
             <span>Disconnect</span>
           </DropdownMenuItem>
@@ -73,7 +73,7 @@ export function WalletConnect() {
   return (
     <Button
       onClick={handleLogin}
-      className="h-12 rounded-2xl bg-secondary-foreground px-8 text-base font-semibold text-secondary transition-all hover:bg-secondary-foreground/90 hover:scale-105"
+      className="bg-secondary-foreground text-secondary hover:bg-secondary-foreground/90 h-12 rounded-2xl px-8 text-base font-semibold transition-all hover:scale-105"
     >
       Connect Wallet
     </Button>

@@ -9,18 +9,18 @@ export default function MintPage() {
         <div className="flex flex-col justify-between py-8">
           {/* Top: Header */}
           <div>
-            <h1 className="text-2xl font-bold uppercase tracking-tighter sm:text-3xl">
+            <h1 className="text-2xl font-bold tracking-tighter uppercase sm:text-3xl">
               Mint RyUSD
             </h1>
           </div>
 
           {/* Bottom: Copywriting */}
           <div className="mt-12 lg:mt-0">
-            <h2 className="text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
+            <h2 className="text-3xl leading-tight font-extrabold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
               UNLOCK THE POWER OF <br className="hidden md:block" />
               <span className="text-muted-foreground">REAL-WORLD ASSETS.</span>
             </h2>
-            <p className="mt-6 text-lg font-medium text-muted-foreground md:text-xl">
+            <p className="text-muted-foreground mt-6 text-lg font-medium md:text-xl">
               Mint RyUSD instantly and start earning sustainable,
               treasury-backed yield.
             </p>
@@ -37,4 +37,3 @@ export default function MintPage() {
     </PageContainer>
   );
 }
-

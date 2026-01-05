@@ -115,18 +115,21 @@ export default function MintRyUSD() {
           {/* From (USDC) */}
           <div className="rounded-xl border p-4">
             <div className="mb-2 flex items-center justify-between">
-              <Label className="text-sm text-muted-foreground">You will pay</Label>
-              <div className="text-sm text-muted-foreground">
-                Balance: <span className="text-foreground">{userUSDCBalance} USDC</span>
+              <Label className="text-muted-foreground text-sm">
+                You will pay
+              </Label>
+              <div className="text-muted-foreground text-sm">
+                Balance:{' '}
+                <span className="text-foreground">{userUSDCBalance} USDC</span>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <input
                 type="number"
                 value={fromAmount}
-                onChange={(e) => setFromAmount(e.target.value)}
+                onChange={e => setFromAmount(e.target.value)}
                 placeholder="0.00"
-                className="flex-1 min-w-0 bg-transparent text-3xl outline-none placeholder:text-muted-foreground [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                className="placeholder:text-muted-foreground min-w-0 flex-1 [appearance:textfield] bg-transparent text-3xl outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 disabled={!authenticated}
               />
               <div className="flex items-center gap-2">
@@ -151,27 +154,29 @@ export default function MintRyUSD() {
 
           {/* Arrow Icon */}
           <div className="relative z-10 flex justify-center">
-            <div className="rounded-full border bg-background p-2 shadow-sm">
-              <ArrowDownUp className="h-5 w-5 text-muted-foreground" />
+            <div className="bg-background rounded-full border p-2 shadow-sm">
+              <ArrowDownUp className="text-muted-foreground h-5 w-5" />
             </div>
           </div>
 
           {/* To (USDC-B) */}
           <div className="rounded-xl border p-4">
             <div className="mb-2 flex items-center justify-between">
-              <Label className="text-sm text-muted-foreground">You will mint</Label>
+              <Label className="text-muted-foreground text-sm">
+                You will mint
+              </Label>
             </div>
             <div className="flex items-center gap-3">
               <input
                 type="number"
                 value={toAmount}
-                onChange={(e) => setToAmount(e.target.value)}
+                onChange={e => setToAmount(e.target.value)}
                 placeholder="0.00"
-                className="flex-1 min-w-0 bg-transparent text-3xl outline-none placeholder:text-muted-foreground [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                className="placeholder:text-muted-foreground min-w-0 flex-1 [appearance:textfield] bg-transparent text-3xl outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 disabled={!authenticated}
               />
               <div className="flex items-center gap-2 rounded-lg px-3 py-2">
-                <div className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-background bg-primary">
+                <div className="text-background bg-primary flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold">
                   R
                 </div>
                 <span className="font-medium">RyUSD</span>
@@ -197,9 +202,9 @@ export default function MintRyUSD() {
               Minting...
             </>
           ) : !authenticated ? (
-            "Connect Wallet to Mint"
+            'Connect Wallet to Mint'
           ) : (
-            "Mint"
+            'Mint'
           )}
         </Button>
       </CardContent>
