@@ -72,13 +72,13 @@
 
 @layer base {
   :root {
-    --background: oklch(1 0 0);
+    --background: oklch(95.26% 0.016 102.83);
     --foreground: oklch(0.147 0.004 49.25);
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.147 0.004 49.25);
     --popover: oklch(1 0 0);
     --popover-foreground: oklch(0.147 0.004 49.25);
-    --primary: oklch(0.6 0.13 163);
+    --primary: oklch(74.18% 0.044 75.27);
     --primary-foreground: oklch(0.98 0.02 166);
     --secondary: oklch(33.86% 0.064 169.36);
     --secondary-foreground: oklch(0.967 0.001 286.375);
@@ -96,7 +96,7 @@
     --chart-3: oklch(0.7 0.15 162);
     --chart-4: oklch(0.6 0.13 163);
     --chart-5: oklch(0.51 0.1 166);
-    --radius: 0.625rem;
+    --radius: 0.925rem;
     --sidebar: oklch(0.985 0.001 106.423);
     --sidebar-foreground: oklch(0.147 0.004 49.25);
     --sidebar-primary: oklch(0.6 0.13 163);

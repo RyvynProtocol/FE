@@ -37,7 +37,7 @@ export default function Navbar() {
       )}
     >
       <div className="p-3 md:px-9 md:py-6">
-        <nav className="pointer-events-auto relative flex flex-col md:flex-row items-center justify-between bg-secondary text-secondary-foreground rounded-2xl md:rounded-4xl px-4 py-3 md:pl-9 md:px-9 md:py-4 shadow-lg">
+        <nav className="pointer-events-auto relative flex flex-col md:flex-row items-center justify-between bg-secondary text-secondary-foreground rounded-2xl md:rounded-4xl px-4 py-3 md:px-6 md:pl-8 md:py-4 shadow-lg">
           {/* Left: Logo */}
           <div className="flex items-center">
             <Link

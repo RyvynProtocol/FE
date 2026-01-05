@@ -1,6 +1,4 @@
-'use client';
-
-
+import { PageContainer } from '@/components/page-container';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,17 +7,13 @@ import { Shield, TrendingUp } from 'lucide-react';
 
 export default function RewardPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-purple-900/20"></div>
-
-      <div className="relative z-10">
-        <main className="mx-auto max-w-6xl px-6 py-8 pb-12">
-          <div className="mb-8">
-            <h1 className="mb-2 text-4xl font-bold text-white">Yield Bonds</h1>
-            <p className="text-slate-400">
-              Your rewards backed by real-world assets
-            </p>
-          </div>
+    <PageContainer className="max-w-6xl">
+      <div className="mb-8">
+        <h1 className="mb-2 text-4xl font-bold text-white">Yield Bonds</h1>
+        <p className="text-slate-400">
+          Your rewards backed by real-world assets
+        </p>
+      </div>
 
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             {/* Left Column - User's Bonds */}
@@ -305,8 +299,6 @@ export default function RewardPage() {
               </Card>
             </div>
           </div>
-        </main>
-      </div>
-    </div>
+    </PageContainer>
   );
 }

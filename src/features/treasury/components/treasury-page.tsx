@@ -1,6 +1,4 @@
-'use client';
-
-
+import { PageContainer } from '@/components/page-container';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -15,17 +13,13 @@ import {
 
 export default function TreasuryPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-purple-900/20"></div>
-
-      <div className="relative z-10">
-        <main className="mx-auto max-w-7xl px-6 py-8 pb-12">
-          <div className="mb-8">
-            <h1 className="mb-2 text-4xl font-bold text-white">Treasury</h1>
-            <p className="text-slate-400">
-              Real-world assets backing USDC-B yields
-            </p>
-          </div>
+    <PageContainer>
+      <div className="mb-8">
+        <h1 className="mb-2 text-4xl font-bold text-white">Treasury</h1>
+        <p className="text-slate-400">
+          Real-world assets backing USDC-B yields
+        </p>
+      </div>
 
           {/* Top Stats */}
           <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -381,8 +375,6 @@ export default function TreasuryPage() {
               </Card>
             </div>
           </div>
-        </main>
-      </div>
-    </div>
+    </PageContainer>
   );
 }
