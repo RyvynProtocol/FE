@@ -15,7 +15,6 @@ interface YieldBudgetWidgetProps {
 export default function YieldBudgetWidget({ metrics }: YieldBudgetWidgetProps) {
   return (
     <Card className="relative flex h-full flex-col overflow-hidden">
-      {/* Background decoration - made larger */}
       <div className="absolute top-0 right-0 -mt-8 -mr-8 h-40 w-40 rounded-full bg-purple-500/10 blur-2xl" />
 
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
