@@ -5,6 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useTreasuryData } from '../hooks/use-treasury-data';
 import AssetAllocationChart from './asset-allocation-chart';
 import TreasuryStatsCard from './treasury-stats-card';
+import YieldBudgetWidget from './yield-budget-widget';
 
 export default function TreasuryTestPage() {
   const { assets, liquidity, yieldMetrics, isLoading } = useTreasuryData();
@@ -47,10 +48,13 @@ export default function TreasuryTestPage() {
         </div>
       </div>
 
-      {/* Second Section: Stats Card */}
       <div className="py-12">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
-          <div className="lg:col-start-2">
+          {/* Left: Yield Streaming */}
+          <YieldBudgetWidget metrics={yieldMetrics} />
+
+          {/* Right: Stats Card */}
+          <div className="lg:h-full">
             <TreasuryStatsCard
               liquidity={liquidity}
               yieldMetrics={yieldMetrics}

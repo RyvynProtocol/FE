@@ -14,22 +14,22 @@ interface YieldBudgetWidgetProps {
 
 export default function YieldBudgetWidget({ metrics }: YieldBudgetWidgetProps) {
   return (
-    <Card className="overflow-hidden relative">
-      {/* Background decoration */}
-      <div className="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 rounded-full bg-purple-500/10 blur-xl" />
+    <Card className="relative flex h-full flex-col overflow-hidden">
+      {/* Background decoration - made larger */}
+      <div className="absolute top-0 right-0 -mt-8 -mr-8 h-40 w-40 rounded-full bg-purple-500/10 blur-2xl" />
 
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="flex items-center gap-2 text-lg font-bold">
-          <TrendingUp className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+        <CardTitle className="flex items-center gap-3 text-xl font-bold">
+          <TrendingUp className="h-6 w-6 text-purple-600 dark:text-purple-400" />
           Yield Budget
         </CardTitle>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
-              <Info className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+              <Info className="text-muted-foreground hover:text-foreground h-5 w-5" />
             </TooltipTrigger>
             <TooltipContent className="max-w-[300px]">
-              <p className="font-semibold mb-2">Smoothed Yield Budget</p>
+              <p className="mb-2 font-semibold">Smoothed Yield Budget</p>
               <p className="text-sm">
                 The protocol calculates a smoothed reward rate based on the
                 Unallocated Yield Pool and moving average transfer volume. This
@@ -39,36 +39,38 @@ export default function YieldBudgetWidget({ metrics }: YieldBudgetWidgetProps) {
           </Tooltip>
         </TooltipProvider>
       </CardHeader>
-      <CardContent className="space-y-4 pt-4">
-        <div>
-          <p className="text-sm font-medium text-muted-foreground">
+
+      <CardContent className="flex flex-1 flex-col justify-between gap-8 pt-6">
+        <div className="space-y-4">
+          <p className="text-muted-foreground text-lg font-medium">
             Unallocated Yield Pool
           </p>
           <div className="flex items-baseline gap-1">
-            <span className="text-2xl font-bold font-mono tracking-tight">
-              ${metrics.unallocatedPool.toLocaleString('en-US', {
+            <span className="font-mono text-6xl font-bold tracking-tighter sm:text-7xl">
+              $
+              {metrics.unallocatedPool.toLocaleString('en-US', {
                 minimumFractionDigits: 4,
                 maximumFractionDigits: 4,
               })}
             </span>
           </div>
-          <p className="text-xs text-green-600 dark:text-green-400 mt-1 flex items-center gap-1">
-             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+          <p className="mt-2 flex items-center gap-2 text-base text-green-600 dark:text-green-400">
+            <span className="relative flex h-3 w-3">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
+              <span className="relative inline-flex h-3 w-3 rounded-full bg-green-500"></span>
             </span>
-            Streaming live (+${metrics.yieldPerSecond}/sec)
+            Live visualization
           </p>
         </div>
 
-        <div className="rounded-lg bg-muted/50 p-3">
-          <div className="flex justify-between items-center mb-1">
-            <span className="text-sm font-medium">Current Reward Rate</span>
-            <span className="text-lg font-bold text-purple-600 dark:text-purple-400">
+        <div className="bg-muted/50 rounded-xl p-6">
+          <div className="mb-2 flex items-center justify-between">
+            <span className="text-lg font-medium">Current Reward Rate</span>
+            <span className="text-xl font-bold text-purple-600 dark:text-purple-400">
               {metrics.currentApy.toFixed(2)}% APY
             </span>
           </div>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             Backed by US Treasuries
           </p>
         </div>
