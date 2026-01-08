@@ -1,10 +1,19 @@
-import type { Metadata } from 'next';
-import './globals.css';
+import Navbar from '@/components/navbar';
+import { Toaster } from '@/components/ui/sonner';
 import { PrivyProvider } from '@/providers/PrivyProvider';
+import type { Metadata } from 'next';
+import { Figtree } from 'next/font/google';
+import './globals.css';
+
+const figtree = Figtree({
+  subsets: ['latin'],
+  variable: '--font-sans',
+});
 
 export const metadata: Metadata = {
   title: 'USDC-B | Stablecoin with Built-in Yield Rewards',
-  description: 'Earn rewards on every transfer. The stablecoin that pays you to use it.',
+  description:
+    'Earn rewards on every transfer. The stablecoin that pays you to use it.',
 };
 
 export default function RootLayout({
@@ -14,8 +23,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">
-        <PrivyProvider>{children}</PrivyProvider>
+      <body className={`antialiased ${figtree.className}`}>
+        <PrivyProvider>
+          <Navbar />
+          {children}
+        </PrivyProvider>
+        <Toaster richColors />
       </body>
     </html>
   );

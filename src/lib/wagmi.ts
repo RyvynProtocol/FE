@@ -1,6 +1,6 @@
-import { http } from 'wagmi';
-import { mainnet, sepolia, mantle, mantleSepoliaTestnet } from 'wagmi/chains';
 import { createConfig } from '@privy-io/wagmi';
+import { http } from 'wagmi';
+import { mainnet, mantle, mantleSepoliaTestnet, sepolia } from 'wagmi/chains';
 
 export const config = createConfig({
   chains: [mainnet, sepolia, mantle, mantleSepoliaTestnet],
