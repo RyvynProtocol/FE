@@ -60,6 +60,7 @@ export default function Navbar() {
                 { label: 'Transfer', href: '/transfer' },
                 { label: 'Reward', href: '/stream-bonds' },
                 { label: 'Treasury', href: '/treasury' },
+                { label: 'Transaction', href: '/transaction' },
               ].map(link => (
                 <Link
                   key={link.href}
@@ -99,6 +100,7 @@ export default function Navbar() {
                 { label: 'Transfer', href: '/transfer' },
                 { label: 'Reward', href: '/stream-bonds' },
                 { label: 'Treasury', href: '/treasury' },
+                { label: 'Transaction', href: '/transaction' },
               ].map(link => (
                 <Link
                   key={link.href}
