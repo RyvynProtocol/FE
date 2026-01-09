@@ -1,14 +1,25 @@
-import { CONTRACTS } from '@/config/contracts';
-import { useAccount, useReadContract, useWriteContract, useSwitchChain, useWaitForTransactionReceipt } from 'wagmi';
 import MockUSDCABI from '@/abis/MockUSDC.json';
-import { parseUnits } from 'viem';
+import { CONTRACTS } from '@/config/contracts';
 import { useEffect } from 'react';
+import { parseUnits } from 'viem';
+import {
+  useAccount,
+  useReadContract,
+  useSwitchChain,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from 'wagmi';
 
 export function useMockUSDC() {
   const { address, chain } = useAccount();
   const { switchChainAsync } = useSwitchChain();
 
-  const { data: balance, refetch } = useReadContract({
+  const {
+    data: balance,
+    refetch,
+    isLoading,
+    error,
+  } = useReadContract({
     address: CONTRACTS.mockUSDC as `0x${string}`,
     abi: MockUSDCABI,
     functionName: 'balanceOf',
@@ -16,10 +27,19 @@ export function useMockUSDC() {
     chainId: 5003,
   });
 
-  const { 
-    writeContract: mintPublic, 
+  console.log(
+    '💰 Balance data:',
+    balance,
+    'isLoading:',
+    isLoading,
+    'error:',
+    error
+  );
+
+  const {
+    writeContract: mintPublic,
     isPending: isSubmitting,
-    data: txHash 
+    data: txHash,
   } = useWriteContract();
 
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
@@ -32,11 +52,12 @@ export function useMockUSDC() {
     }
   }, [isSuccess, refetch]);
 
-  const { writeContract: mintAdmin, isPending: isMintingAdmin } = useWriteContract();
+  const { writeContract: mintAdmin, isPending: isMintingAdmin } =
+    useWriteContract();
 
   const claimFaucet = async (amount: string) => {
     if (!address) return;
-    
+
     if (chain?.id !== 5003) {
       try {
         await switchChainAsync({ chainId: 5003 });
@@ -45,7 +66,7 @@ export function useMockUSDC() {
         return;
       }
     }
-    
+
     mintPublic({
       address: CONTRACTS.mockUSDC as `0x${string}`,
       abi: MockUSDCABI,
