@@ -46,26 +46,57 @@ export default function ClaimActionCard({
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Wallet className="text-primary h-5 w-5" />
-          Claim Rewards
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="bg-muted/50 rounded-lg p-4">
-          <p className="text-muted-foreground text-sm font-medium">
-            Available to Claim
-          </p>
-          <p className="text-3xl font-bold">{formattedBalance}</p>
+    <Card className="border-primary/20 shadow-xl">
+      <CardHeader className="space-y-4 pb-4">
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2 text-xl">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+              <Wallet className="text-primary h-5 w-5" />
+            </div>
+            Claim Rewards
+          </CardTitle>
+          <div className="flex h-2 w-2 animate-pulse rounded-full bg-primary" />
         </div>
-        <p className="text-muted-foreground text-xs">
-          Claiming will transfer your pending yield to your connected wallet.
-          Network fees apply.
-        </p>
+      </CardHeader>
+      <CardContent className="space-y-6 pb-6">
+        <div className="relative overflow-hidden rounded-xl border border-primary/20 bg-gradient-to-br from-primary/5 to-chart-2/5 p-6 shadow-inner">
+          <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-primary/10 blur-2xl" />
+          <div className="relative space-y-2">
+            <div className="flex items-center gap-2">
+              <p className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">
+                Available to Claim
+              </p>
+              <div className="h-px flex-1 bg-gradient-to-r from-primary/30 to-transparent" />
+            </div>
+            <p className="text-4xl font-bold tracking-tight">{formattedBalance}</p>
+          </div>
+        </div>
+
+        <div className="rounded-lg border border-border/50 bg-muted/30 p-4">
+          <div className="flex items-start gap-3">
+            <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10">
+              <svg
+                className="h-3 w-3 text-primary"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <p className="text-muted-foreground text-xs leading-relaxed">
+              Claiming will transfer your pending yield to your connected wallet.
+              Network fees apply.
+            </p>
+          </div>
+        </div>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="pt-2">
         <Button
           className="w-full"
           size="lg"
