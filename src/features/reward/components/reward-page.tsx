@@ -26,28 +26,35 @@ export default function RewardDashboard() {
   return (
     <PageContainer>
       <div className="grid min-h-[calc(100vh-200px)] grid-cols-1 gap-12 lg:grid-cols-2">
-        {/* Left Column: Hero Text & Ticker */}
-        <div className="flex flex-col justify-center py-8">
-          <div>
-            <h1 className="text-primary mb-12 text-2xl font-bold tracking-tighter uppercase sm:text-3xl">
-              My Rewards
-            </h1>
+        {/* Left Column: Balance & Hero Text */}
+        <div className="relative flex flex-col">
+          {/* Pending Yield - Centered */}
+          <div className="flex flex-1 items-center pt-16">
             <ClaimableBalanceTicker
               balance={stream.claimableBalance}
               earningsRateApy={stream.earningsRateApy}
               flowRatePerSecond={stream.flowRatePerSecond}
             />
-            <div className="mt-8 max-w-lg">
-              <p className="text-muted-foreground text-lg">
-                Your assets are generating yield in real-time. Watch your
-                balance grow every second.
-              </p>
-            </div>
+          </div>
+
+          {/* Hero Text - Bottom Left */}
+          <div className="space-y-6 pb-3">
+            <h1 className="text-5xl font-bold tracking-tight uppercase sm:text-6xl lg:text-7xl">
+              CLAIM YOUR{' '}
+              <span className="text-muted-foreground">REAL-WORLD YIELD.</span>
+            </h1>
+            <p className="text-muted-foreground max-w-lg text-lg">
+              Your assets are generating yield in real-time. Claim your pending
+              rewards instantly to your wallet.
+            </p>
           </div>
         </div>
-        {/* Right Column: Action Card */}
+
+        {/* Right Column: Claim Card */}
         <div className="flex items-center justify-center lg:justify-end">
-          <div className="w-full max-w-md">
+          <div className="relative w-full max-w-md">
+            {/* Shadow Box */}
+            <div className="absolute -bottom-4 -right-4 -z-10 h-full w-full rounded-lg bg-[#B5A48F]" />
             <ClaimActionCard
               balance={stream.claimableBalance}
               onClaim={claimReward}

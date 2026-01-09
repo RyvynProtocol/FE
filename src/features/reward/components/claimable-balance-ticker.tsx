@@ -1,5 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { ArrowUpRight } from 'lucide-react';
+import { useCounterAnimation } from '../hooks/use-counter-animation';
 
 interface ClaimableBalanceTickerProps {
   balance: number;
@@ -18,13 +19,13 @@ export default function ClaimableBalanceTicker({
     return <Skeleton className="h-16 w-64" />;
   }
 
-  // Format with high precision (6 decimals)
-  const formattedBalance = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 6,
-    maximumFractionDigits: 6,
-  }).format(balance);
+  const animatedBalance = useCounterAnimation({
+    end: balance,
+    duration: 1500,
+    decimals: 6,
+  });
+
+  const formattedBalance = `$${animatedBalance}`;
 
   const dailyEarnings = flowRatePerSecond ? flowRatePerSecond * 86400 : 0;
 

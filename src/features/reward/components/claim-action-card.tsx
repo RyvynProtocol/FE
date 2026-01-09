@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/card';
 import { CheckCircle2, Loader2, Wallet } from 'lucide-react';
 import { ClaimTransaction } from '../hooks/use-reward-data';
+import { useCounterAnimation } from '../hooks/use-counter-animation';
 
 interface ClaimActionCardProps {
   balance: number;
@@ -24,14 +25,17 @@ export default function ClaimActionCard({
   const isSuccess = claimTx.status === 'success';
   const isDisabled = balance <= 0 || isPending;
 
-  const formattedBalance = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(balance);
+  const animatedBalance = useCounterAnimation({
+    end: balance,
+    duration: 1500,
+    decimals: 2,
+  });
+
+  const formattedBalance = `$${animatedBalance}`;
 
   if (isSuccess) {
     return (
-      <Card className="w-full border-green-500/20 bg-green-500/10">
+      <Card className="w-full border-green-500/20 bg-card">
         <CardContent className="flex flex-col items-center justify-center py-12 text-center">
           <CheckCircle2 className="mb-4 h-12 w-12 text-green-600" />
           <h3 className="text-xl font-bold text-green-700">
@@ -46,8 +50,8 @@ export default function ClaimActionCard({
   }
 
   return (
-    <Card className="border-primary/20 shadow-xl">
-      <CardHeader className="space-y-4 pb-4">
+    <Card className="border-primary/20 bg-card shadow-xl">
+      <CardHeader className="pb-6">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2 text-xl">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
@@ -58,7 +62,7 @@ export default function ClaimActionCard({
           <div className="flex h-2 w-2 animate-pulse rounded-full bg-primary" />
         </div>
       </CardHeader>
-      <CardContent className="space-y-6 pb-6">
+      <CardContent className="space-y-5 pb-6 pt-0">
         <div className="relative overflow-hidden rounded-xl border border-primary/20 bg-gradient-to-br from-primary/5 to-chart-2/5 p-6 shadow-inner">
           <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-primary/10 blur-2xl" />
           <div className="relative space-y-2">
