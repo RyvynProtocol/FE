@@ -27,7 +27,7 @@ export default function RewardDashboard() {
     <PageContainer>
       <div className="grid min-h-[calc(100vh-200px)] grid-cols-1 gap-12 lg:grid-cols-2">
         {/* Left Column: Balance & Hero Text */}
-        <div className="relative flex flex-col">
+        <div className="relative flex flex-col gap-16">
           {/* Pending Yield - Centered */}
           <div className="flex flex-1 items-center pt-16">
             <ClaimableBalanceTicker
