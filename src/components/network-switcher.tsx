@@ -8,8 +8,6 @@ export function NetworkSwitcher() {
   const { chain } = useAccount();
   const { switchChain } = useSwitchChain();
 
-  console.log('chain', chain)
-
   const isWrongNetwork = chain && chain.id !== 5003;
 
   return (
