@@ -1,4 +1,9 @@
 import { useEffect, useState } from 'react';
+import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { formatUnits } from 'viem';
+import { CONTRACTS } from '@/config/contracts';
+import RyBONDABI from '@/abis/RyBOND.json';
+import { toast } from 'sonner';
 
 // --- Types ---
 
@@ -24,35 +29,95 @@ export interface UseRewardDataReturn {
   isLoading: boolean;
 }
 
-// --- Mock Data ---
-
-const MOCK_STREAM: RewardStream = {
-  claimableBalance: 45.2190,
-  earningsRateApy: 5.2,
-  flowRatePerSecond: 0.00012, // ~$10/day
-  lastUpdated: Date.now(),
-  isStreaming: true,
-};
-
 // --- Hook ---
 
 export function useRewardData(): UseRewardDataReturn {
-  const [stream, setStream] = useState<RewardStream>(MOCK_STREAM);
+  const { address } = useAccount();
+  const [stream, setStream] = useState<RewardStream>({
+    claimableBalance: 0,
+    earningsRateApy: 0,
+    flowRatePerSecond: 0,
+    lastUpdated: Date.now(),
+    isStreaming: true,
+  });
   const [claimTx, setClaimTx] = useState<ClaimTransaction>({ status: 'idle' });
-  const [isLoading, setIsLoading] = useState(true);
 
-  // Simulate initial load
+  // Read pending ryBOND balance (includes accrued yield)
+  const { data: pendingBalance, refetch: refetchPending, isLoading: isLoadingBalance, error: balanceError } = useReadContract({
+    address: CONTRACTS.ryBOND as `0x${string}`,
+    abi: RyBONDABI,
+    functionName: 'pendingRyBond',
+    args: address ? [address] : undefined,
+    chainId: 5003,
+    query: {
+      enabled: !!address,
+      // Remove refetchInterval - we'll handle streaming on client side
+    }
+  });
+
+  // Debug logging
+  console.log('=== ryBOND Read Debug ===');
+  console.log('Wallet Address:', address);
+  console.log('ryBOND Contract:', CONTRACTS.ryBOND);
+  console.log('isLoadingBalance:', isLoadingBalance);
+  console.log('balanceError:', balanceError);
+  console.log('pendingBalance:', pendingBalance);
+
+  // Read yield rate per second
+  const { data: yieldRate } = useReadContract({
+    address: CONTRACTS.ryBOND as `0x${string}`,
+    abi: RyBONDABI,
+    functionName: 'yieldRatePerSecond',
+    chainId: 5003,
+  });
+
+  // Claim function
+  const {
+    writeContract: claim,
+    isPending: isClaiming,
+    data: claimTxHash
+  } = useWriteContract();
+
+  const { isLoading: isClaimConfirming, isSuccess: isClaimSuccess } = useWaitForTransactionReceipt({
+    hash: claimTxHash,
+  });
+
+  // Update stream state when balance changes from contract
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
+    if (pendingBalance !== undefined) {
+      const balance = Number(formatUnits(pendingBalance as bigint, 6));
+      const flowRate = yieldRate
+        ? Number(formatUnits((yieldRate as bigint), 18))
+        : 0;
 
-  // Mock Streaming Logic
+      console.log('=== ryBOND Balance Update ===');
+      console.log('Address:', address);
+      console.log('Contract:', CONTRACTS.ryBOND);
+      console.log('Raw pendingBalance:', pendingBalance?.toString());
+      console.log('Formatted balance:', balance);
+      console.log('Raw yieldRate:', yieldRate?.toString());
+      console.log('Formatted flowRate:', flowRate);
+
+      // Calculate APY from yield rate
+      // yieldRate is per second, so: APY = flowRate * 365 * 24 * 60 * 60 / balance * 100
+      const apy = balance > 0 && flowRate > 0
+        ? (flowRate * 31536000 / balance) * 100
+        : 0;
+
+      setStream({
+        claimableBalance: balance,
+        earningsRateApy: apy,
+        flowRatePerSecond: flowRate,
+        lastUpdated: Date.now(),
+        isStreaming: balance > 0,
+      });
+    }
+  }, [pendingBalance, yieldRate, address]);
+
+  // Client-side streaming: update balance every second based on flow rate
   useEffect(() => {
-    if (isLoading || !stream.isStreaming) return;
+    if (!stream.isStreaming || stream.flowRatePerSecond <= 0) return;
 
-    // Use a fast interval for smooth-ish updates, or 1s as per spec requirement (SC-001)
-    // Spec says "updates visually every 1 second".
     const interval = setInterval(() => {
       setStream((prev) => ({
         ...prev,
@@ -62,41 +127,70 @@ export function useRewardData(): UseRewardDataReturn {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isLoading, stream.isStreaming]);
+  }, [stream.isStreaming, stream.flowRatePerSecond]);
+
+  // Handle claim success
+  useEffect(() => {
+    if (isClaimSuccess && claimTxHash) {
+      setClaimTx({
+        status: 'success',
+        txHash: claimTxHash,
+        amountClaimed: stream.claimableBalance,
+        timestamp: Date.now(),
+      });
+
+      toast.success('Rewards claimed successfully!');
+      refetchPending();
+
+      // Reset to idle after 5 seconds
+      setTimeout(() => {
+        setClaimTx({ status: 'idle' });
+      }, 5000);
+    }
+  }, [isClaimSuccess, claimTxHash, stream.claimableBalance, refetchPending]);
+
+  // Handle claim pending
+  useEffect(() => {
+    if (isClaiming || isClaimConfirming) {
+      setClaimTx({ status: 'pending' });
+    }
+  }, [isClaiming, isClaimConfirming]);
 
   const claimReward = async () => {
+    if (!address) {
+      toast.error('Please connect your wallet');
+      return;
+    }
+
     if (claimTx.status === 'pending') return;
 
-    setClaimTx({ status: 'pending' });
+    if (stream.claimableBalance <= 0) {
+      toast.error('No rewards to claim');
+      return;
+    }
 
-    // Mock Transaction Delay
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    // Success State
-    setClaimTx({
-      status: 'success',
-      txHash: '0xmock...hash',
-      amountClaimed: stream.claimableBalance,
-      timestamp: Date.now(),
-    });
-
-    // Reset Balance
-    setStream((prev) => ({
-      ...prev,
-      claimableBalance: 0,
-    }));
-
-    // Reset to Idle after a delay? Or let the UI handle it?
-    // Let's keep it success so UI can show "Claimed!"
-    setTimeout(() => {
+    try {
+      toast.info('Claiming rewards...');
+      claim({
+        address: CONTRACTS.ryBOND as `0x${string}`,
+        abi: RyBONDABI,
+        functionName: 'claim',
+        chainId: 5003,
+      });
+    } catch (error) {
+      console.error('Claim failed:', error);
+      toast.error('Claim failed. Please try again.');
+      setClaimTx({ status: 'error' });
+      setTimeout(() => {
         setClaimTx({ status: 'idle' });
-    }, 5000);
+      }, 3000);
+    }
   };
 
   return {
     stream,
     claimTx,
     claimReward,
-    isLoading,
+    isLoading: isLoadingBalance,
   };
 }
