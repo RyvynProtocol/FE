@@ -10,31 +10,96 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { usePrivy, useWallets } from '@privy-io/react-auth';
+import { usePrivy } from '@privy-io/react-auth';
 import { Info, Loader2, Send } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { formatUnits, parseUnits, isAddress } from 'viem';
+import { CONTRACTS } from '@/config/contracts';
+import RyUSDABI from '@/abis/RyUSD.json';
+import RyvynHandlerABI from '@/abis/RyvynHandler.json';
 
 export default function TransferRyUSD() {
   const { authenticated } = usePrivy();
-  const { wallets } = useWallets();
-  const connectedWallet = wallets[0];
+  const { address, chain } = useAccount();
 
   const [recipient, setRecipient] = useState('');
   const [amount, setAmount] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [txHash, setTxHash] = useState('');
 
-  // Mock data - replace with actual contract calls
-  const userUSDCBBalance = '12,458.50'; // Replace with actual balance
-  const estimatedGas = '0.0008'; // Replace with actual gas estimation
-  const totalReward = amount ? parseFloat(amount) * 0.01 : 0; // 1% total reward
-  const senderReward = (totalReward * 0.7).toFixed(4); // 70% for sender
-  const receiverReward = (totalReward * 0.3).toFixed(4); // 30% for receiver
+  // Read ryUSD balance
+  const { data: ryUSDBalance, refetch: refetchBalance } = useReadContract({
+    address: CONTRACTS.ryUSD as `0x${string}`,
+    abi: RyUSDABI,
+    functionName: 'balanceOf',
+    args: address ? [address] : undefined,
+    chainId: 5003,
+  });
+
+  // Preview transfer rewards from RyvynHandler
+  const { data: rewardsPreview } = useReadContract({
+    address: CONTRACTS.ryvynHandler as `0x${string}`,
+    abi: RyvynHandlerABI,
+    functionName: 'previewTransferRewards',
+    args: address && amount && parseFloat(amount) > 0
+      ? [address, parseUnits(amount, 6)]
+      : undefined,
+    chainId: 5003,
+    query: {
+      enabled: !!address && !!amount && parseFloat(amount) > 0,
+    }
+  });
+
+  // Transfer hook
+  const {
+    writeContract: transfer,
+    isPending: isTransferring,
+    data: transferTxHash
+  } = useWriteContract();
+
+  const { isLoading: isTransferConfirming, isSuccess: isTransferSuccess } = useWaitForTransactionReceipt({
+    hash: transferTxHash,
+  });
+
+  // Refresh balance after successful transfer
+  useEffect(() => {
+    if (isTransferSuccess) {
+      refetchBalance();
+      toast.success('Transfer successful!');
+      setRecipient('');
+      setAmount('');
+    }
+  }, [isTransferSuccess, refetchBalance]);
+
+  const formattedBalance = ryUSDBalance
+    ? formatUnits(ryUSDBalance as bigint, 6)
+    : '0.00';
+
+  const isWrongNetwork = chain && chain.id !== 5003;
+  const isLoading = isTransferring || isTransferConfirming;
+
+  // Parse rewards from contract (returns: senderReward, receiverReward, senderShare, receiverShare)
+  const senderReward = rewardsPreview
+    ? formatUnits((rewardsPreview as bigint[])[0], 6)
+    : '0.00';
+  const receiverReward = rewardsPreview
+    ? formatUnits((rewardsPreview as bigint[])[1], 6)
+    : '0.00';
+  const senderShare = rewardsPreview
+    ? Number((rewardsPreview as bigint[])[2])
+    : 70;
+  const receiverShare = rewardsPreview
+    ? Number((rewardsPreview as bigint[])[3])
+    : 30;
 
   const handleTransfer = async () => {
-    if (!authenticated || !connectedWallet) {
+    if (!authenticated) {
       toast.error('Please connect your wallet first');
+      return;
+    }
+
+    if (isWrongNetwork) {
+      toast.error('Please switch to Mantle Sepolia');
       return;
     }
 
@@ -43,33 +108,29 @@ export default function TransferRyUSD() {
       return;
     }
 
-    // Basic address validation
-    if (!/^0x[a-fA-F0-9]{40}$/.test(recipient)) {
+    // Validate Ethereum address
+    if (!isAddress(recipient)) {
       toast.error('Please enter a valid Ethereum address');
       return;
     }
 
-    setIsLoading(true);
     try {
-      // TODO: Implement actual transfer logic
-      // Call transfer function on USDC-B contract
-
-      await new Promise(resolve => setTimeout(resolve, 2000)); // Mock delay
-
-      setTxHash('0xabcd...1234'); // Mock tx hash
-      toast.success('Transfer successful!');
-      setRecipient('');
-      setAmount('');
+      toast.info('Transferring ryUSD...');
+      transfer({
+        address: CONTRACTS.ryUSD as `0x${string}`,
+        abi: RyUSDABI,
+        functionName: 'transfer',
+        args: [recipient as `0x${string}`, parseUnits(amount, 6)],
+        chainId: 5003,
+      });
     } catch (error) {
       console.error('Transfer failed:', error);
       toast.error('Transfer failed. Please try again.');
-    } finally {
-      setIsLoading(false);
     }
   };
 
   const handleMaxClick = () => {
-    setAmount(userUSDCBBalance.replace(/,/g, ''));
+    setAmount(formattedBalance);
   };
 
   return (
@@ -78,7 +139,7 @@ export default function TransferRyUSD() {
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-7">
           <div>
             <CardTitle className="text-2xl font-bold">
-              Transfer USDC-B
+              Transfer ryUSD
             </CardTitle>
           </div>
         </CardHeader>
@@ -87,13 +148,13 @@ export default function TransferRyUSD() {
           <div className="bg-muted/50 rounded-xl border p-4">
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground text-sm">
-                Your USDC-B Balance
+                Your ryUSD Balance
               </span>
               <div className="flex items-center gap-2">
                 <div className="bg-primary text-primary-foreground flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold">
-                  B
+                  R
                 </div>
-                <span className="text-lg font-bold">{userUSDCBBalance}</span>
+                <span className="text-lg font-bold">{formattedBalance}</span>
               </div>
             </div>
           </div>
@@ -138,9 +199,9 @@ export default function TransferRyUSD() {
               />
               <div className="bg-muted flex items-center gap-2 rounded-lg px-3 py-2">
                 <div className="bg-primary text-primary-foreground flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold">
-                  B
+                  R
                 </div>
-                <span className="font-medium">USDC-B</span>
+                <span className="font-medium">ryUSD</span>
               </div>
             </div>
           </div>
@@ -148,10 +209,6 @@ export default function TransferRyUSD() {
           {/* Transaction Details */}
           {amount && parseFloat(amount) > 0 && (
             <div className="bg-muted/50 space-y-2 rounded-lg border p-4">
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Estimated Gas</span>
-                <span>{estimatedGas} ETH</span>
-              </div>
               <div className="flex justify-between text-sm">
                 <TooltipProvider>
                   <Tooltip>
@@ -161,14 +218,14 @@ export default function TransferRyUSD() {
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>
-                        You earn 70% of the Stream Bonds rewards generated by
-                        this transfer.
+                        You earn {senderShare}% of the Stream Bonds rewards generated by
+                        this transfer based on your holding age.
                       </p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
                 <span className="text-green-600 dark:text-green-400">
-                  +{senderReward} USDC-B
+                  +{senderReward} ryBOND
                 </span>
               </div>
               <div className="flex justify-between text-sm">
@@ -180,20 +237,20 @@ export default function TransferRyUSD() {
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>
-                        The recipient earns 30% of the Stream Bonds rewards.
+                        The recipient earns {receiverShare}% of the Stream Bonds rewards.
                       </p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
                 <span className="text-green-600 dark:text-green-400">
-                  +{receiverReward} USDC-B
+                  +{receiverReward} ryBOND
                 </span>
               </div>
               <div className="flex justify-between border-t pt-2 text-sm">
                 <span className="text-muted-foreground font-medium">
                   Recipient Receives
                 </span>
-                <span className="font-medium">{amount} USDC-B</span>
+                <span className="font-medium">{amount} ryUSD</span>
               </div>
             </div>
           )}
@@ -209,12 +266,22 @@ export default function TransferRyUSD() {
             </div>
           </div>
 
+          {/* Wrong Network Warning */}
+          {isWrongNetwork && (
+            <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-3">
+              <p className="text-sm text-red-600 dark:text-red-400">
+                Wrong network! Please switch to Mantle Sepolia.
+              </p>
+            </div>
+          )}
+
           {/* Transfer Button */}
           <Button
             onClick={handleTransfer}
             disabled={
               !authenticated ||
               isLoading ||
+              isWrongNetwork ||
               !recipient ||
               !amount ||
               parseFloat(amount) <= 0
@@ -231,16 +298,16 @@ export default function TransferRyUSD() {
             ) : (
               <>
                 <Send className="mr-2 h-5 w-5" />
-                Transfer USDC-B
+                Transfer ryUSD
               </>
             )}
           </Button>
 
-          {txHash && (
+          {transferTxHash && isTransferSuccess && (
             <div className="rounded-lg border border-green-500/30 bg-green-500/10 p-3">
               <p className="text-sm text-green-600 dark:text-green-400">
                 Transfer successful! Hash:{' '}
-                <span className="font-mono">{txHash}</span>
+                <span className="font-mono">{transferTxHash.slice(0, 10)}...{transferTxHash.slice(-8)}</span>
               </p>
             </div>
           )}

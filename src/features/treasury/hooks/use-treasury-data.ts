@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useYieldManagerData } from './use-yield-manager-data';
 
 // --- Types ---
 
@@ -94,6 +95,10 @@ const INITIAL_YIELD_METRICS: YieldMetrics = {
 
 export function useTreasuryData(): UseTreasuryDataReturn {
   const [assets] = useState<TreasuryAsset[]>(MOCK_ASSETS);
+
+  // Fetch real data from YieldManager smart contract
+  const { stats: yieldManagerStats, isLoading: isLoadingYieldManager } = useYieldManagerData();
+
   const [yieldMetrics, setYieldMetrics] = useState<YieldMetrics>(
     INITIAL_YIELD_METRICS
   );
@@ -125,28 +130,24 @@ export function useTreasuryData(): UseTreasuryDataReturn {
     totalTvl,
   };
 
+  // Update yield metrics with real data from YieldManager
   useEffect(() => {
-    // Simulate initial fetch delay
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    if (isLoading) return;
-
-    // Mock Streaming
-    const interval = setInterval(() => {
-      setYieldMetrics((prev) => ({
-        ...prev,
-        unallocatedPool: prev.unallocatedPool + prev.yieldPerSecond,
+    if (yieldManagerStats) {
+      setYieldMetrics({
+        unallocatedPool: yieldManagerStats.unallocatedPool,
+        currentApy: yieldManagerStats.dynamicRewardRate,
+        yieldPerSecond: yieldManagerStats.movingAverageVolume > 0
+          ? (yieldManagerStats.unallocatedPool * yieldManagerStats.targetUtilization / 100) / (yieldManagerStats.movingAverageVolume * 31536000)
+          : 0,
         lastUpdated: Date.now(),
-      }));
-    }, 1000); // Update every second
+      });
+    }
+  }, [yieldManagerStats]);
 
-    return () => clearInterval(interval);
-  }, [isLoading]);
+  useEffect(() => {
+    // Set loading state based on YieldManager data
+    setIsLoading(isLoadingYieldManager);
+  }, [isLoadingYieldManager]);
 
   return {
     assets,
