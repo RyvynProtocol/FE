@@ -5,15 +5,19 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { cn } from '@/lib/utils';
 import { usePrivy, useWallets } from '@privy-io/react-auth';
 import { Loader2, LogOut, Wallet } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 
 export function WalletConnect() {
+  const pathname = usePathname();
   const { ready, authenticated, login, logout, linkWallet } = usePrivy();
   const { wallets } = useWallets();
 
   const connectedWallet = wallets[0];
+  const isHome = pathname === '/';
 
   useEffect(() => {
     if (authenticated && connectedWallet) {
@@ -52,8 +56,13 @@ export function WalletConnect() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
-            variant="secondary"
-            className="h-12 rounded-full border border-white/10 bg-white/10 px-6 text-base font-medium text-white hover:bg-white/20"
+            variant="ghost"
+            className={cn(
+              'h-12 rounded-full border px-6 text-base font-medium',
+              isHome
+                ? 'border-secondary/20 bg-secondary/10 text-secondary hover:bg-secondary/20'
+                : 'border-white/10 bg-white/10 text-white hover:bg-white/20'
+            )}
           >
             <Wallet className="mr-2 h-4 w-4" />
             <span className="font-mono">
@@ -77,7 +86,12 @@ export function WalletConnect() {
   return (
     <Button
       onClick={handleLogin}
-      className="bg-secondary-foreground text-secondary hover:bg-secondary-foreground/90 h-12 rounded-2xl px-8 text-base font-semibold transition-all hover:scale-105"
+      className={cn(
+        'h-12 rounded-2xl px-8 text-base font-semibold transition-all hover:scale-105',
+        isHome
+          ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90'
+          : 'bg-background text-foreground hover:bg-background/90'
+      )}
     >
       {authenticated ? 'Link Wallet' : 'Connect Wallet'}
     </Button>

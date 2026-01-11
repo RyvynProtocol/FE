@@ -3,10 +3,12 @@
 import { WalletConnect } from '@/components/wallet-connect';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { NetworkSwitcher } from './network-switcher';
 
 export default function Navbar() {
+  const pathname = usePathname();
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
@@ -30,6 +32,8 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
 
+  const isHome = pathname === '/';
+
   return (
     <div
       className={cn(
@@ -38,7 +42,14 @@ export default function Navbar() {
       )}
     >
       <div className="p-3 md:px-9 md:py-6">
-        <nav className="bg-secondary text-secondary-foreground pointer-events-auto relative flex flex-col items-center justify-between rounded-2xl px-4 py-3 shadow-lg md:flex-row md:rounded-4xl md:px-6 md:py-4 md:pl-8">
+        <nav
+          className={cn(
+            'pointer-events-auto relative flex flex-col items-center justify-between rounded-2xl px-4 py-3 shadow-lg md:flex-row md:rounded-4xl md:px-6 md:py-4 md:pl-8',
+            isHome
+              ? 'bg-background text-secondary'
+              : 'bg-secondary text-background'
+          )}
+        >
           {/* Left: Logo */}
           <div className="flex items-center">
             <Link
