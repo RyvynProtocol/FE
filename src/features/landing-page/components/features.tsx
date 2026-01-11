@@ -34,8 +34,18 @@ export default function Features() {
     offset: ['start start', 'end end'],
   });
 
+  const backgroundColor = useTransform(
+    scrollYProgress,
+    [0.3, 0.8],
+    ['oklch(21% 0.006 285.885)', 'oklch(14% 0.005 285.823)']
+  );
+
   return (
-    <section ref={containerRef} className="relative h-[400vh] bg-zinc-900">
+    <motion.section
+      ref={containerRef}
+      className="relative h-[400vh] bg-zinc-900"
+      style={{ backgroundColor }}
+    >
       <div className="sticky top-0 flex h-screen items-center justify-center overflow-hidden p-4">
         {FEATURES.map((feature, index) => {
           // Stagger specific ranges for each card based on index
@@ -56,7 +66,7 @@ export default function Features() {
           );
         })}
       </div>
-    </section>
+    </motion.section>
   );
 }
 
@@ -126,7 +136,6 @@ function Card({
       }}
       className="absolute flex h-[60vh] w-[90vw] max-w-sm flex-col justify-between rounded-3xl p-8 text-white shadow-2xl md:h-[70vh] md:w-[400px]"
     >
-      {/* Background with explicit color */}
       <div
         className="absolute inset-0 rounded-3xl"
         style={{ backgroundColor: feature.color }}
