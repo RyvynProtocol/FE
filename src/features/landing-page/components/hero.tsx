@@ -14,18 +14,18 @@ export default function Hero() {
   });
 
   // Lowest text: "FOR EVERYONE" - Fades out first
-  const forEveryoneOpacity = useTransform(scrollYProgress, [0.35, 0.5], [1, 0]);
+  const forEveryoneOpacity = useTransform(scrollYProgress, [0.2, 0.45], [1, 0]);
 
   // Middle text: "PAYMENTS" - Moves up, then fades out
-  const paymentsY = useTransform(scrollYProgress, [0.45, 0.7], [0, -150]);
-  const paymentsOpacity = useTransform(scrollYProgress, [0.5, 0.65], [1, 0]);
+  const paymentsY = useTransform(scrollYProgress, [0.4, 0.55], [0, -100]);
+  const paymentsOpacity = useTransform(scrollYProgress, [0.45, 0.6], [1, 0]);
 
   // Top text: "PROFITABLE" - Moves up, then fades out last
-  const profitableY = useTransform(scrollYProgress, [0.45, 0.75], [0, -200]);
-  const profitableOpacity = useTransform(scrollYProgress, [0.5, 0.8], [1, 0]);
+  const profitableY = useTransform(scrollYProgress, [0.4, 0.55], [0, -150]);
+  const profitableOpacity = useTransform(scrollYProgress, [0.5, 0.65], [1, 0]);
 
   // Subtitle & Button
-  const contentOpacity = useTransform(scrollYProgress, [0.5, 0.7], [1, 0]);
+  const contentOpacity = useTransform(scrollYProgress, [0.4, 0.6], [1, 0]);
 
   // Transitions from starting color (secondary) to zinc-900
   const backgroundColor = useTransform(

@@ -1,13 +1,11 @@
-import Hero from '@/features/landing-page/components/Hero';
+import Features from '@/features/landing-page/components/features';
+import Hero from '@/features/landing-page/components/hero';
 
 export default function Home() {
   return (
     <main>
       <Hero />
-      {/* Placeholder section to enable scrolling */}
-      <section className="flex min-h-screen items-center justify-center bg-zinc-900 text-white">
-        <h2 className="text-4xl font-bold">More features coming soon...</h2>
-      </section>
+      <Features />
     </main>
   );
 }
