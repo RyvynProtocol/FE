@@ -10,7 +10,7 @@ export default function TransferPage() {
           {/* Top: Header */}
           <div>
             <h1 className="text-2xl font-bold tracking-tighter uppercase sm:text-3xl">
-              Transfer USDC-B
+              Transfer ryUSD
             </h1>
           </div>
 
@@ -21,7 +21,7 @@ export default function TransferPage() {
               <span className="text-muted-foreground">REAL-WORLD YIELD.</span>
             </h2>
             <p className="text-muted-foreground mt-6 text-lg font-medium md:text-xl">
-              Transfer USDC-B instantly to anyone and earn Stream Bonds rewards
+              Transfer ryUSD instantly to anyone and earn Stream Bonds rewards
               on every transaction.
             </p>
           </div>

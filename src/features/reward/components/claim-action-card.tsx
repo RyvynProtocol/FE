@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { CheckCircle2, Loader2, Wallet } from 'lucide-react';
+import { CheckCircle2, ExternalLink, Loader2, Wallet } from 'lucide-react';
 import { ClaimTransaction } from '../hooks/use-reward-data';
 
 interface ClaimActionCardProps {
@@ -30,6 +30,10 @@ export default function ClaimActionCard({
   }).format(balance);
 
   if (isSuccess) {
+    const blockExplorerUrl = claimTx.txHash
+      ? `https://explorer-testnet.mantle.xyz/tx/${claimTx.txHash}`
+      : null;
+
     return (
       <Card className="w-full border-green-500/20 bg-green-500/10">
         <CardContent className="flex flex-col items-center justify-center py-12 text-center">
@@ -38,8 +42,19 @@ export default function ClaimActionCard({
             Claim Successful!
           </h3>
           <p className="text-muted-foreground mt-2">
-            Your earnings have been sent to your wallet.
+            ryUSD has been sent to your wallet.
           </p>
+          {blockExplorerUrl && (
+            <a
+              href={blockExplorerUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary mt-4 flex items-center gap-2 text-sm hover:underline"
+            >
+              View transaction
+              <ExternalLink className="h-4 w-4" />
+            </a>
+          )}
         </CardContent>
       </Card>
     );
@@ -59,13 +74,15 @@ export default function ClaimActionCard({
             Available to Claim
           </p>
           <p className="text-3xl font-bold">{formattedBalance}</p>
+          <p className="text-muted-foreground mt-1 text-xs">
+            Equivalent in ryUSD
+          </p>
         </div>
         <p className="text-muted-foreground text-xs">
-          Claiming will transfer your pending yield to your connected wallet.
-          Network fees apply.
+          Network fees apply for claiming transactions.
         </p>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="flex-col gap-2">
         <Button
           className="w-full"
           size="lg"
@@ -73,8 +90,13 @@ export default function ClaimActionCard({
           disabled={isDisabled}
         >
           {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {isPending ? 'Processing...' : 'Claim Reward'}
+          {isPending ? 'Processing Transaction...' : 'Claim Reward'}
         </Button>
+        {isPending && (
+          <p className="text-muted-foreground text-center text-xs">
+            ⏳ Waiting for blockchain confirmation. This may take 30-60 seconds depending on network congestion.
+          </p>
+        )}
       </CardFooter>
     </Card>
   );

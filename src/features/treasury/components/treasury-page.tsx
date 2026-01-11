@@ -6,6 +6,7 @@ import { useTreasuryData } from '../hooks/use-treasury-data';
 import AssetAllocationChart from './asset-allocation-chart';
 import TreasuryStatsCard from './treasury-stats-card';
 import YieldBudgetWidget from './yield-budget-widget';
+import RewardFormulaBreakdown from './reward-formula-breakdown';
 
 export default function TreasuryPage() {
   const { assets, liquidity, yieldMetrics, isLoading } = useTreasuryData();
@@ -81,6 +82,11 @@ export default function TreasuryPage() {
             />
           </div>
         </div>
+      </div>
+
+      {/* Formula Breakdown Section */}
+      <div className="py-12">
+        <RewardFormulaBreakdown />
       </div>
     </PageContainer>
   );
