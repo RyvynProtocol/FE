@@ -57,6 +57,7 @@ export default function Navbar() {
               { label: 'Transfer', href: '/transfer' },
               { label: 'Reward', href: '/stream-bonds' },
               { label: 'Treasury', href: '/treasury' },
+              { label: 'Transactions', href: '/transactions' },
             ].map(link => (
               <Link
                 key={link.href}
