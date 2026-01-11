@@ -11,6 +11,8 @@ export function useTransactionHistory(filters?: TransactionFilters) {
   const publicClient = usePublicClient();
   const [transferEvents, setTransferEvents] = useState<any[]>([]);
   const [claimEvents, setClaimEvents] = useState<any[]>([]);
+  const [depositEvents, setDepositEvents] = useState<any[]>([]);
+  const [withdrawalEvents, setWithdrawalEvents] = useState<any[]>([]);
   const [isLoadingEvents, setIsLoadingEvents] = useState(false);
 
   // Fetch mint history from RyUSD contract
@@ -92,14 +94,18 @@ export function useTransactionHistory(filters?: TransactionFilters) {
         };
 
         // Fetch all events in parallel with chunking
-        const [sentEvents, receivedEvents, claims] = await Promise.all([
+        const [sentEvents, receivedEvents, claims, deposits, withdrawals] = await Promise.all([
           fetchInChunks('Transfer', { from: address }, CONTRACTS.ryUSD as `0x${string}`, RyUSDabi),
           fetchInChunks('Transfer', { to: address }, CONTRACTS.ryUSD as `0x${string}`, RyUSDabi),
           fetchInChunks('RyBONDClaimed', { user: address }, CONTRACTS.ryBOND as `0x${string}`, RyBONDabi),
+          fetchInChunks('Deposit', { user: address }, CONTRACTS.ryUSD as `0x${string}`, RyUSDabi),
+          fetchInChunks('Withdrawal', { user: address }, CONTRACTS.ryUSD as `0x${string}`, RyUSDabi),
         ]);
 
         setTransferEvents([...sentEvents, ...receivedEvents]);
         setClaimEvents(claims);
+        setDepositEvents(deposits);
+        setWithdrawalEvents(withdrawals);
       } catch (error) {
         console.error('Error fetching events:', error);
       } finally {
@@ -116,17 +122,52 @@ export function useTransactionHistory(filters?: TransactionFilters) {
 
     const allTransactions: Transaction[] = [];
 
-    // Parse mint history
+    // Create deposit event lookup map by mintIndex AND blockNumber as fallback
+    const depositMapByIndex = new Map();
+    const depositMapByBlock = new Map();
+    depositEvents.forEach((event: any) => {
+      const mintIndex = Number(event.args?.mintIndex);
+      const blockNumber = Number(event.blockNumber);
+      depositMapByIndex.set(mintIndex, event);
+      depositMapByBlock.set(blockNumber, event);
+    });
+
+    // Debug logging
+    console.log('=== Transaction History Debug ===');
+    console.log('Deposit events count:', depositEvents.length);
+    console.log('Mint history count:', Array.isArray(mintHistory) ? mintHistory.length : 0);
+    console.log('Deposit map by index size:', depositMapByIndex.size);
+    console.log('Deposit map by block size:', depositMapByBlock.size);
+    if (depositEvents.length > 0) {
+      console.log('Sample deposit event:', depositEvents[0]);
+    }
+
+    // Parse mint history with actual transaction hashes from Deposit events
     if (mintHistory && Array.isArray(mintHistory)) {
-      const mintTxs = mintHistory.map((record: any, index: number) => ({
-        id: `mint-${index}`,
-        type: 'mint' as const,
-        amount: Number(formatUnits(record.amount, 6)),
-        timestamp: Number(record.timestamp),
-        blockNumber: Number(record.blockNumber),
-        txHash: `0x${record.blockNumber.toString(16).padStart(64, '0')}`,
-        status: 'success' as const,
-      }));
+      const mintTxs = mintHistory.map((record: any, index: number) => {
+        // Try to find deposit event by mintIndex first, then by blockNumber as fallback
+        let depositEvent = depositMapByIndex.get(index);
+        if (!depositEvent) {
+          depositEvent = depositMapByBlock.get(Number(record.blockNumber));
+        }
+
+        // Debug: Check if we found matching deposit event
+        if (!depositEvent) {
+          console.log(`No deposit event found for mint index ${index}, block ${record.blockNumber}`);
+        } else {
+          console.log(`Found deposit event for mint index ${index}:`, depositEvent.transactionHash);
+        }
+
+        return {
+          id: `mint-${index}`,
+          type: 'mint' as const,
+          amount: Number(formatUnits(record.amount, 6)),
+          timestamp: Number(record.timestamp),
+          blockNumber: Number(record.blockNumber),
+          txHash: depositEvent?.transactionHash || `0x${record.blockNumber.toString(16).padStart(64, '0')}`,
+          status: 'success' as const,
+        };
+      });
       allTransactions.push(...mintTxs);
     }
 
@@ -175,6 +216,20 @@ export function useTransactionHistory(filters?: TransactionFilters) {
       allTransactions.push(...claimTxs);
     }
 
+    // Parse withdrawal events
+    if (withdrawalEvents && Array.isArray(withdrawalEvents)) {
+      const withdrawalTxs = withdrawalEvents.map((event: any, index: number) => ({
+        id: `withdraw-${event.transactionHash}-${index}`,
+        type: 'withdraw' as const,
+        amount: Number(formatUnits((event.args?.amount as bigint) || BigInt(0), 6)),
+        timestamp: event.blockTimestamp || Date.now() / 1000,
+        blockNumber: Number(event.blockNumber),
+        txHash: event.transactionHash as string,
+        status: 'success' as const,
+      }));
+      allTransactions.push(...withdrawalTxs);
+    }
+
     // Sort by timestamp descending (newest first)
     allTransactions.sort((a, b) => b.timestamp - a.timestamp);
 
@@ -203,13 +258,82 @@ export function useTransactionHistory(filters?: TransactionFilters) {
     }
 
     return filtered;
-  }, [mintHistory, transferEvents, claimEvents, address, filters]);
+  }, [mintHistory, transferEvents, claimEvents, depositEvents, withdrawalEvents, address, filters]);
 
-  const refetch = () => {
+  const refetch = async () => {
     refetchMints();
-    // Re-fetch events by changing a state variable to trigger useEffect
-    if (publicClient && address) {
-      setIsLoadingEvents(true);
+    // Manually trigger re-fetch of events
+    if (!address || !publicClient) return;
+
+    setIsLoadingEvents(true);
+    try {
+      const currentBlock = await publicClient.getBlockNumber();
+      const BLOCK_RANGE = 9000;
+      const TOTAL_BLOCKS = 50000;
+      const fromBlock = currentBlock - BigInt(TOTAL_BLOCKS);
+
+      const fetchInChunks = async (
+        eventName: string,
+        args: any,
+        contractAddress: `0x${string}`,
+        abi: any
+      ) => {
+        const allEvents = [];
+        let currentFrom = fromBlock;
+
+        while (currentFrom < currentBlock) {
+          const currentTo = currentFrom + BigInt(BLOCK_RANGE) > currentBlock
+            ? currentBlock
+            : currentFrom + BigInt(BLOCK_RANGE);
+
+          try {
+            const events = await publicClient.getContractEvents({
+              address: contractAddress,
+              abi,
+              eventName,
+              args,
+              fromBlock: currentFrom,
+              toBlock: currentTo,
+            });
+
+            const eventsWithTimestamps = await Promise.all(
+              events.map(async (event) => {
+                try {
+                  const block = await publicClient.getBlock({ blockNumber: event.blockNumber });
+                  return { ...event, blockTimestamp: Number(block.timestamp) };
+                } catch (err) {
+                  return { ...event, blockTimestamp: Date.now() / 1000 };
+                }
+              })
+            );
+
+            allEvents.push(...eventsWithTimestamps);
+          } catch (err) {
+            console.error(`Error fetching ${eventName}:`, err);
+          }
+
+          currentFrom = currentTo + BigInt(1);
+        }
+
+        return allEvents;
+      };
+
+      const [sentEvents, receivedEvents, claims, deposits, withdrawals] = await Promise.all([
+        fetchInChunks('Transfer', { from: address }, CONTRACTS.ryUSD as `0x${string}`, RyUSDabi),
+        fetchInChunks('Transfer', { to: address }, CONTRACTS.ryUSD as `0x${string}`, RyUSDabi),
+        fetchInChunks('RyBONDClaimed', { user: address }, CONTRACTS.ryBOND as `0x${string}`, RyBONDabi),
+        fetchInChunks('Deposit', { user: address }, CONTRACTS.ryUSD as `0x${string}`, RyUSDabi),
+        fetchInChunks('Withdrawal', { user: address }, CONTRACTS.ryUSD as `0x${string}`, RyUSDabi),
+      ]);
+
+      setTransferEvents([...sentEvents, ...receivedEvents]);
+      setClaimEvents(claims);
+      setDepositEvents(deposits);
+      setWithdrawalEvents(withdrawals);
+    } catch (error) {
+      console.error('Error refetching events:', error);
+    } finally {
+      setIsLoadingEvents(false);
     }
   };
 

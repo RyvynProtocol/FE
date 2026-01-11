@@ -12,6 +12,7 @@ interface TransactionFiltersProps {
 const TRANSACTION_TYPES: { value: TransactionType | 'all'; label: string }[] = [
   { value: 'all', label: 'All Types' },
   { value: 'mint', label: 'Mint' },
+  { value: 'withdraw', label: 'Withdraw' },
   { value: 'claim', label: 'Claim' },
   { value: 'transfer_sent', label: 'Sent' },
   { value: 'transfer_received', label: 'Received' },

@@ -1,4 +1,4 @@
-export type TransactionType = 'mint' | 'claim' | 'transfer_sent' | 'transfer_received';
+export type TransactionType = 'mint' | 'withdraw' | 'claim' | 'transfer_sent' | 'transfer_received';
 
 export type TransactionStatus = 'success' | 'pending' | 'failed';
 
