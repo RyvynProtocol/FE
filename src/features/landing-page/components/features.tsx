@@ -43,7 +43,7 @@ export default function Features() {
   return (
     <motion.section
       ref={containerRef}
-      className="relative h-[400vh] bg-zinc-900"
+      className="relative h-[300vh] bg-zinc-900"
       style={{ backgroundColor }}
     >
       <div className="sticky top-0 flex h-screen items-center justify-center overflow-hidden p-4">
