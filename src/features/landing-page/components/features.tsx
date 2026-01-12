@@ -134,7 +134,7 @@ function Card({
         y,
         zIndex: index, // Ensure stacking order
       }}
-      className="absolute flex h-[60vh] w-[90vw] max-w-sm flex-col justify-between rounded-3xl p-8 text-white shadow-2xl md:h-[70vh] md:w-[400px]"
+      className="absolute flex h-[60vh] w-[90vw] max-w-[650px] flex-col justify-between rounded-3xl p-8 text-white shadow-2xl md:h-[70vh] md:w-[500px] lg:w-[35vw]"
     >
       <div
         className="absolute inset-0 rounded-3xl"
