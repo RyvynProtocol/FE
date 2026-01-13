@@ -1,18 +1,24 @@
-import { useEffect, useState, useRef } from 'react';
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { formatUnits } from 'viem';
-import { CONTRACTS } from '@/config/contracts';
 import RyBONDABI from '@/abis/RyBOND.json';
+import { CONTRACTS } from '@/config/contracts';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
+import { formatUnits } from 'viem';
+import {
+  useAccount,
+  useReadContract,
+  useSwitchChain,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from 'wagmi';
 
 // --- Types ---
 
 export type RewardStream = {
-  claimableBalance: number;   // Current available USD value
-  earningsRateApy: number;    // Static APY
-  flowRatePerSecond: number;  // USD earning per second
-  lastUpdated: number;        // Timestamp
-  isStreaming: boolean;       // Active state
+  claimableBalance: number; // Current available USD value
+  earningsRateApy: number; // Static APY
+  flowRatePerSecond: number; // USD earning per second
+  lastUpdated: number; // Timestamp
+  isStreaming: boolean; // Active state
 };
 
 export type ClaimTransaction = {
@@ -32,7 +38,8 @@ export interface UseRewardDataReturn {
 // --- Hook ---
 
 export function useRewardData(): UseRewardDataReturn {
-  const { address } = useAccount();
+  const { address, chain } = useAccount();
+  const { switchChainAsync } = useSwitchChain();
   const [stream, setStream] = useState<RewardStream>({
     claimableBalance: 0,
     earningsRateApy: 0,
@@ -44,7 +51,12 @@ export function useRewardData(): UseRewardDataReturn {
   const hasShownSuccessToast = useRef(false);
 
   // Read pending ryBOND balance (includes accrued yield)
-  const { data: pendingBalance, refetch: refetchPending, isLoading: isLoadingBalance, error: balanceError } = useReadContract({
+  const {
+    data: pendingBalance,
+    refetch: refetchPending,
+    isLoading: isLoadingBalance,
+    error: balanceError,
+  } = useReadContract({
     address: CONTRACTS.ryBOND as `0x${string}`,
     abi: RyBONDABI,
     functionName: 'pendingRyBond',
@@ -53,7 +65,7 @@ export function useRewardData(): UseRewardDataReturn {
     query: {
       enabled: !!address,
       // Remove refetchInterval - we'll handle streaming on client side
-    }
+    },
   });
 
   // Debug logging
@@ -87,13 +99,13 @@ export function useRewardData(): UseRewardDataReturn {
     writeContract: claim,
     isPending: isClaiming,
     data: claimTxHash,
-    error: claimError
+    error: claimError,
   } = useWriteContract();
 
   const {
     isLoading: isClaimConfirming,
     isSuccess: isClaimSuccess,
-    error: receiptError
+    error: receiptError,
   } = useWaitForTransactionReceipt({
     hash: claimTxHash,
   });
@@ -103,7 +115,7 @@ export function useRewardData(): UseRewardDataReturn {
     if (pendingBalance !== undefined) {
       const balance = Number(formatUnits(pendingBalance as bigint, 6));
       const flowRate = yieldRate
-        ? Number(formatUnits((yieldRate as bigint), 18))
+        ? Number(formatUnits(yieldRate as bigint, 18))
         : 0;
 
       console.log('=== ryBOND Balance Update ===');
@@ -116,9 +128,10 @@ export function useRewardData(): UseRewardDataReturn {
 
       // Calculate APY from yield rate
       // yieldRate is per second, so: APY = flowRate * 365 * 24 * 60 * 60 / balance * 100
-      const apy = balance > 0 && flowRate > 0
-        ? (flowRate * 31536000 / balance) * 100
-        : 0;
+      const apy =
+        balance > 0 && flowRate > 0
+          ? ((flowRate * 31536000) / balance) * 100
+          : 0;
 
       setStream({
         claimableBalance: balance,
@@ -132,10 +145,15 @@ export function useRewardData(): UseRewardDataReturn {
 
   // Client-side streaming: update balance every second based on flow rate
   useEffect(() => {
-    if (!stream.isStreaming || stream.flowRatePerSecond <= 0 || stream.claimableBalance <= 0) return;
+    if (
+      !stream.isStreaming ||
+      stream.flowRatePerSecond <= 0 ||
+      stream.claimableBalance <= 0
+    )
+      return;
 
     const interval = setInterval(() => {
-      setStream((prev) => {
+      setStream(prev => {
         // Don't increment if balance is already 0 (after claim)
         if (prev.claimableBalance <= 0) return prev;
 
@@ -165,7 +183,7 @@ export function useRewardData(): UseRewardDataReturn {
       });
 
       // Immediately reset balance to 0 after claim
-      setStream((prev) => ({
+      setStream(prev => ({
         ...prev,
         claimableBalance: 0,
         isStreaming: false, // Stop streaming temporarily
@@ -183,7 +201,7 @@ export function useRewardData(): UseRewardDataReturn {
         hasShownSuccessToast.current = false; // Reset for next claim
 
         // Resume streaming if there's any new balance
-        setStream((prev) => ({
+        setStream(prev => ({
           ...prev,
           isStreaming: prev.claimableBalance > 0,
         }));
@@ -208,7 +226,9 @@ export function useRewardData(): UseRewardDataReturn {
 
       // Check for specific error types
       if (errorMessage.includes('out of gas')) {
-        toast.error('Claim failed: Vault may not have sufficient ryUSD. Please contact admin.');
+        toast.error(
+          'Claim failed: Vault may not have sufficient ryUSD. Please contact admin.'
+        );
       } else if (errorMessage.includes('nothing to claim')) {
         toast.error('No rewards available to claim');
       } else if (errorMessage.includes('insufficient balance')) {
@@ -239,6 +259,16 @@ export function useRewardData(): UseRewardDataReturn {
     if (stream.claimableBalance <= 0) {
       toast.error('No rewards to claim');
       return;
+    }
+
+    if (chain?.id !== 5003) {
+      try {
+        await switchChainAsync({ chainId: 5003 });
+      } catch (error) {
+        console.error('Failed to switch network:', error);
+        toast.error('Failed to switch network. Please switch manually.');
+        return;
+      }
     }
 
     try {

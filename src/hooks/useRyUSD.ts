@@ -1,13 +1,19 @@
-import { useWriteContract, useReadContract, useAccount, useWaitForTransactionReceipt } from 'wagmi';
-import { parseUnits } from 'viem';
-import { useEffect } from 'react';
-import { CONTRACTS } from '@/config/contracts';
-import RyUSDABI from '@/abis/RyUSD.json';
 import MockUSDCABI from '@/abis/MockUSDC.json';
+import RyUSDABI from '@/abis/RyUSD.json';
+import { CONTRACTS } from '@/config/contracts';
+import { useEffect } from 'react';
+import { parseUnits } from 'viem';
+import {
+  useAccount,
+  useReadContract,
+  useSwitchChain,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from 'wagmi';
 
 export function useRyUSD() {
   const { address } = useAccount();
-  
+
   const { data: ryUSDBalance, refetch: refetchRyUSD } = useReadContract({
     address: CONTRACTS.ryUSD as `0x${string}`,
     abi: RyUSDABI,
@@ -24,35 +30,38 @@ export function useRyUSD() {
     chainId: 5003,
   });
 
-  const { 
-    writeContract: approve, 
+  const {
+    writeContract: approve,
     isPending: isApproving,
-    data: approveTxHash 
+    data: approveTxHash,
   } = useWriteContract();
 
-  const { 
-    writeContract: deposit, 
+  const {
+    writeContract: deposit,
     isPending: isDepositing,
-    data: depositTxHash 
+    data: depositTxHash,
   } = useWriteContract();
 
-  const { 
-    writeContract: withdraw, 
+  const {
+    writeContract: withdraw,
     isPending: isWithdrawing,
-    data: withdrawTxHash 
+    data: withdrawTxHash,
   } = useWriteContract();
 
-  const { isLoading: isApprovingConfirm, isSuccess: isApproveSuccess } = useWaitForTransactionReceipt({
-    hash: approveTxHash,
-  });
+  const { isLoading: isApprovingConfirm, isSuccess: isApproveSuccess } =
+    useWaitForTransactionReceipt({
+      hash: approveTxHash,
+    });
 
-  const { isLoading: isDepositingConfirm, isSuccess: isDepositSuccess } = useWaitForTransactionReceipt({
-    hash: depositTxHash,
-  });
+  const { isLoading: isDepositingConfirm, isSuccess: isDepositSuccess } =
+    useWaitForTransactionReceipt({
+      hash: depositTxHash,
+    });
 
-  const { isLoading: isWithdrawingConfirm, isSuccess: isWithdrawSuccess } = useWaitForTransactionReceipt({
-    hash: withdrawTxHash,
-  });
+  const { isLoading: isWithdrawingConfirm, isSuccess: isWithdrawSuccess } =
+    useWaitForTransactionReceipt({
+      hash: withdrawTxHash,
+    });
 
   useEffect(() => {
     if (isApproveSuccess) {
@@ -74,7 +83,26 @@ export function useRyUSD() {
     }
   }, [isWithdrawSuccess, refetchRyUSD, refetchAllowance]);
 
-  const approveUSDC = (amount: string) => {
+  const { switchChainAsync } = useSwitchChain();
+  const { chain } = useAccount();
+
+  const checkChain = async () => {
+    if (chain?.id !== 5003) {
+      try {
+        await switchChainAsync({ chainId: 5003 });
+        return true;
+      } catch (error) {
+        console.error('Failed to switch network:', error);
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const approveUSDC = async (amount: string) => {
+    const isCorrectChain = await checkChain();
+    if (!isCorrectChain) return;
+
     approve({
       address: CONTRACTS.mockUSDC as `0x${string}`,
       abi: MockUSDCABI,
@@ -84,7 +112,10 @@ export function useRyUSD() {
     });
   };
 
-  const mintRyUSD = (amount: string) => {
+  const mintRyUSD = async (amount: string) => {
+    const isCorrectChain = await checkChain();
+    if (!isCorrectChain) return;
+
     deposit({
       address: CONTRACTS.ryUSD as `0x${string}`,
       abi: RyUSDABI,
@@ -94,7 +125,10 @@ export function useRyUSD() {
     });
   };
 
-  const withdrawRyUSD = (amount: string) => {
+  const withdrawRyUSD = async (amount: string) => {
+    const isCorrectChain = await checkChain();
+    if (!isCorrectChain) return;
+
     withdraw({
       address: CONTRACTS.ryUSD as `0x${string}`,
       abi: RyUSDABI,

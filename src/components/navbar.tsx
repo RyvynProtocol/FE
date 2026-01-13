@@ -6,7 +6,6 @@ import { motion } from 'motion/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { NetworkSwitcher } from './network-switcher';
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -94,7 +93,6 @@ export default function Navbar() {
 
           {/* Right: Actions */}
           <div className="flex items-center space-x-2">
-            <NetworkSwitcher />
             <WalletConnect />
           </div>
         </nav>
