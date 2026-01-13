@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useAccount, useReadContract, usePublicClient } from 'wagmi';
-import { formatUnits } from 'viem';
-import { CONTRACTS } from '@/config/contracts';
-import RyUSDabi from '@/abis/RyUSD.json';
 import RyBONDabi from '@/abis/RyBOND.json';
+import RyUSDabi from '@/abis/RyUSD.json';
+import { CONTRACTS } from '@/config/contracts';
+import { useEffect, useMemo, useState } from 'react';
+import { formatUnits } from 'viem';
+import { useAccount, usePublicClient, useReadContract } from 'wagmi';
 import { Transaction, TransactionFilters } from '../types';
 
 export function useTransactionHistory(filters?: TransactionFilters) {
@@ -55,9 +55,10 @@ export function useTransactionHistory(filters?: TransactionFilters) {
           let currentFrom = fromBlock;
 
           while (currentFrom < currentBlock) {
-            const currentTo = currentFrom + BigInt(BLOCK_RANGE) > currentBlock
-              ? currentBlock
-              : currentFrom + BigInt(BLOCK_RANGE);
+            const currentTo =
+              currentFrom + BigInt(BLOCK_RANGE) > currentBlock
+                ? currentBlock
+                : currentFrom + BigInt(BLOCK_RANGE);
 
             try {
               const events = await publicClient.getContractEvents({
@@ -71,10 +72,15 @@ export function useTransactionHistory(filters?: TransactionFilters) {
 
               // Fetch timestamps for all events in this chunk
               const eventsWithTimestamps = await Promise.all(
-                events.map(async (event) => {
+                events.map(async event => {
                   try {
-                    const block = await publicClient.getBlock({ blockNumber: event.blockNumber });
-                    return { ...event, blockTimestamp: Number(block.timestamp) };
+                    const block = await publicClient.getBlock({
+                      blockNumber: event.blockNumber,
+                    });
+                    return {
+                      ...event,
+                      blockTimestamp: Number(block.timestamp),
+                    };
                   } catch (err) {
                     console.error('Error fetching block timestamp:', err);
                     return { ...event, blockTimestamp: Date.now() / 1000 };
@@ -84,7 +90,10 @@ export function useTransactionHistory(filters?: TransactionFilters) {
 
               allEvents.push(...eventsWithTimestamps);
             } catch (err) {
-              console.error(`Error fetching ${eventName} events from block ${currentFrom} to ${currentTo}:`, err);
+              console.error(
+                `Error fetching ${eventName} events from block ${currentFrom} to ${currentTo}:`,
+                err
+              );
             }
 
             currentFrom = currentTo + BigInt(1);
@@ -94,13 +103,39 @@ export function useTransactionHistory(filters?: TransactionFilters) {
         };
 
         // Fetch all events in parallel with chunking
-        const [sentEvents, receivedEvents, claims, deposits, withdrawals] = await Promise.all([
-          fetchInChunks('Transfer', { from: address }, CONTRACTS.ryUSD as `0x${string}`, RyUSDabi),
-          fetchInChunks('Transfer', { to: address }, CONTRACTS.ryUSD as `0x${string}`, RyUSDabi),
-          fetchInChunks('RyBONDClaimed', { user: address }, CONTRACTS.ryBOND as `0x${string}`, RyBONDabi),
-          fetchInChunks('Deposit', { user: address }, CONTRACTS.ryUSD as `0x${string}`, RyUSDabi),
-          fetchInChunks('Withdrawal', { user: address }, CONTRACTS.ryUSD as `0x${string}`, RyUSDabi),
-        ]);
+        const [sentEvents, receivedEvents, claims, deposits, withdrawals] =
+          await Promise.all([
+            fetchInChunks(
+              'Transfer',
+              { from: address },
+              CONTRACTS.ryUSD as `0x${string}`,
+              RyUSDabi
+            ),
+            fetchInChunks(
+              'Transfer',
+              { to: address },
+              CONTRACTS.ryUSD as `0x${string}`,
+              RyUSDabi
+            ),
+            fetchInChunks(
+              'RyBONDClaimed',
+              { user: address },
+              CONTRACTS.ryBOND as `0x${string}`,
+              RyBONDabi
+            ),
+            fetchInChunks(
+              'Deposit',
+              { user: address },
+              CONTRACTS.ryUSD as `0x${string}`,
+              RyUSDabi
+            ),
+            fetchInChunks(
+              'Withdrawal',
+              { user: address },
+              CONTRACTS.ryUSD as `0x${string}`,
+              RyUSDabi
+            ),
+          ]);
 
         setTransferEvents([...sentEvents, ...receivedEvents]);
         setClaimEvents(claims);
@@ -132,16 +167,6 @@ export function useTransactionHistory(filters?: TransactionFilters) {
       depositMapByBlock.set(blockNumber, event);
     });
 
-    // Debug logging
-    console.log('=== Transaction History Debug ===');
-    console.log('Deposit events count:', depositEvents.length);
-    console.log('Mint history count:', Array.isArray(mintHistory) ? mintHistory.length : 0);
-    console.log('Deposit map by index size:', depositMapByIndex.size);
-    console.log('Deposit map by block size:', depositMapByBlock.size);
-    if (depositEvents.length > 0) {
-      console.log('Sample deposit event:', depositEvents[0]);
-    }
-
     // Parse mint history with actual transaction hashes from Deposit events
     if (mintHistory && Array.isArray(mintHistory)) {
       const mintTxs = mintHistory.map((record: any, index: number) => {
@@ -151,20 +176,15 @@ export function useTransactionHistory(filters?: TransactionFilters) {
           depositEvent = depositMapByBlock.get(Number(record.blockNumber));
         }
 
-        // Debug: Check if we found matching deposit event
-        if (!depositEvent) {
-          console.log(`No deposit event found for mint index ${index}, block ${record.blockNumber}`);
-        } else {
-          console.log(`Found deposit event for mint index ${index}:`, depositEvent.transactionHash);
-        }
-
         return {
           id: `mint-${index}`,
           type: 'mint' as const,
           amount: Number(formatUnits(record.amount, 6)),
           timestamp: Number(record.timestamp),
           blockNumber: Number(record.blockNumber),
-          txHash: depositEvent?.transactionHash || `0x${record.blockNumber.toString(16).padStart(64, '0')}`,
+          txHash:
+            depositEvent?.transactionHash ||
+            `0x${record.blockNumber.toString(16).padStart(64, '0')}`,
           status: 'success' as const,
         };
       });
@@ -174,7 +194,7 @@ export function useTransactionHistory(filters?: TransactionFilters) {
     // Parse transfer events
     if (transferEvents && Array.isArray(transferEvents)) {
       const transferTxs = transferEvents
-        .filter((event) => {
+        .filter(event => {
           // Filter out mint/burn transactions (from/to zero address)
           const from = event.args?.from as string;
           const to = event.args?.to as string;
@@ -185,12 +205,16 @@ export function useTransactionHistory(filters?: TransactionFilters) {
           const from = event.args?.from as string;
           const to = event.args?.to as string;
           const isSent = from.toLowerCase() === address.toLowerCase();
-          const txType: 'transfer_sent' | 'transfer_received' = isSent ? 'transfer_sent' : 'transfer_received';
+          const txType: 'transfer_sent' | 'transfer_received' = isSent
+            ? 'transfer_sent'
+            : 'transfer_received';
 
           return {
             id: `transfer-${event.transactionHash}-${index}`,
             type: txType,
-            amount: Number(formatUnits((event.args?.value as bigint) || BigInt(0), 6)),
+            amount: Number(
+              formatUnits((event.args?.value as bigint) || BigInt(0), 6)
+            ),
             timestamp: event.blockTimestamp || Date.now() / 1000,
             blockNumber: Number(event.blockNumber),
             txHash: event.transactionHash as string,
@@ -207,8 +231,12 @@ export function useTransactionHistory(filters?: TransactionFilters) {
       const claimTxs = claimEvents.map((event: any, index: number) => ({
         id: `claim-${event.transactionHash}-${index}`,
         type: 'claim' as const,
-        amount: Number(formatUnits((event.args?.amount as bigint) || BigInt(0), 6)),
-        timestamp: event.blockTimestamp || Number((event.args?.timestamp as bigint) || Date.now() / 1000),
+        amount: Number(
+          formatUnits((event.args?.amount as bigint) || BigInt(0), 6)
+        ),
+        timestamp:
+          event.blockTimestamp ||
+          Number((event.args?.timestamp as bigint) || Date.now() / 1000),
         blockNumber: Number(event.blockNumber),
         txHash: event.transactionHash as string,
         status: 'success' as const,
@@ -218,15 +246,19 @@ export function useTransactionHistory(filters?: TransactionFilters) {
 
     // Parse withdrawal events
     if (withdrawalEvents && Array.isArray(withdrawalEvents)) {
-      const withdrawalTxs = withdrawalEvents.map((event: any, index: number) => ({
-        id: `withdraw-${event.transactionHash}-${index}`,
-        type: 'withdraw' as const,
-        amount: Number(formatUnits((event.args?.amount as bigint) || BigInt(0), 6)),
-        timestamp: event.blockTimestamp || Date.now() / 1000,
-        blockNumber: Number(event.blockNumber),
-        txHash: event.transactionHash as string,
-        status: 'success' as const,
-      }));
+      const withdrawalTxs = withdrawalEvents.map(
+        (event: any, index: number) => ({
+          id: `withdraw-${event.transactionHash}-${index}`,
+          type: 'withdraw' as const,
+          amount: Number(
+            formatUnits((event.args?.amount as bigint) || BigInt(0), 6)
+          ),
+          timestamp: event.blockTimestamp || Date.now() / 1000,
+          blockNumber: Number(event.blockNumber),
+          txHash: event.transactionHash as string,
+          status: 'success' as const,
+        })
+      );
       allTransactions.push(...withdrawalTxs);
     }
 
@@ -237,28 +269,36 @@ export function useTransactionHistory(filters?: TransactionFilters) {
     let filtered = allTransactions;
 
     if (filters?.type && filters.type !== 'all') {
-      filtered = filtered.filter((tx) => tx.type === filters.type);
+      filtered = filtered.filter(tx => tx.type === filters.type);
     }
 
     if (filters?.dateFrom) {
-      filtered = filtered.filter((tx) => tx.timestamp >= filters.dateFrom!);
+      filtered = filtered.filter(tx => tx.timestamp >= filters.dateFrom!);
     }
 
     if (filters?.dateTo) {
-      filtered = filtered.filter((tx) => tx.timestamp <= filters.dateTo!);
+      filtered = filtered.filter(tx => tx.timestamp <= filters.dateTo!);
     }
 
     if (filters?.search) {
       const searchLower = filters.search.toLowerCase();
       filtered = filtered.filter(
-        (tx) =>
+        tx =>
           tx.txHash.toLowerCase().includes(searchLower) ||
           tx.type.toLowerCase().includes(searchLower)
       );
     }
 
     return filtered;
-  }, [mintHistory, transferEvents, claimEvents, depositEvents, withdrawalEvents, address, filters]);
+  }, [
+    mintHistory,
+    transferEvents,
+    claimEvents,
+    depositEvents,
+    withdrawalEvents,
+    address,
+    filters,
+  ]);
 
   const refetch = async () => {
     refetchMints();
@@ -282,9 +322,10 @@ export function useTransactionHistory(filters?: TransactionFilters) {
         let currentFrom = fromBlock;
 
         while (currentFrom < currentBlock) {
-          const currentTo = currentFrom + BigInt(BLOCK_RANGE) > currentBlock
-            ? currentBlock
-            : currentFrom + BigInt(BLOCK_RANGE);
+          const currentTo =
+            currentFrom + BigInt(BLOCK_RANGE) > currentBlock
+              ? currentBlock
+              : currentFrom + BigInt(BLOCK_RANGE);
 
           try {
             const events = await publicClient.getContractEvents({
@@ -297,9 +338,11 @@ export function useTransactionHistory(filters?: TransactionFilters) {
             });
 
             const eventsWithTimestamps = await Promise.all(
-              events.map(async (event) => {
+              events.map(async event => {
                 try {
-                  const block = await publicClient.getBlock({ blockNumber: event.blockNumber });
+                  const block = await publicClient.getBlock({
+                    blockNumber: event.blockNumber,
+                  });
                   return { ...event, blockTimestamp: Number(block.timestamp) };
                 } catch (err) {
                   return { ...event, blockTimestamp: Date.now() / 1000 };
@@ -318,13 +361,39 @@ export function useTransactionHistory(filters?: TransactionFilters) {
         return allEvents;
       };
 
-      const [sentEvents, receivedEvents, claims, deposits, withdrawals] = await Promise.all([
-        fetchInChunks('Transfer', { from: address }, CONTRACTS.ryUSD as `0x${string}`, RyUSDabi),
-        fetchInChunks('Transfer', { to: address }, CONTRACTS.ryUSD as `0x${string}`, RyUSDabi),
-        fetchInChunks('RyBONDClaimed', { user: address }, CONTRACTS.ryBOND as `0x${string}`, RyBONDabi),
-        fetchInChunks('Deposit', { user: address }, CONTRACTS.ryUSD as `0x${string}`, RyUSDabi),
-        fetchInChunks('Withdrawal', { user: address }, CONTRACTS.ryUSD as `0x${string}`, RyUSDabi),
-      ]);
+      const [sentEvents, receivedEvents, claims, deposits, withdrawals] =
+        await Promise.all([
+          fetchInChunks(
+            'Transfer',
+            { from: address },
+            CONTRACTS.ryUSD as `0x${string}`,
+            RyUSDabi
+          ),
+          fetchInChunks(
+            'Transfer',
+            { to: address },
+            CONTRACTS.ryUSD as `0x${string}`,
+            RyUSDabi
+          ),
+          fetchInChunks(
+            'RyBONDClaimed',
+            { user: address },
+            CONTRACTS.ryBOND as `0x${string}`,
+            RyBONDabi
+          ),
+          fetchInChunks(
+            'Deposit',
+            { user: address },
+            CONTRACTS.ryUSD as `0x${string}`,
+            RyUSDabi
+          ),
+          fetchInChunks(
+            'Withdrawal',
+            { user: address },
+            CONTRACTS.ryUSD as `0x${string}`,
+            RyUSDabi
+          ),
+        ]);
 
       setTransferEvents([...sentEvents, ...receivedEvents]);
       setClaimEvents(claims);

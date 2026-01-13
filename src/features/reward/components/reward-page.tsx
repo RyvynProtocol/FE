@@ -69,6 +69,11 @@ export default function RewardDashboard() {
               earningsRateApy={stream.earningsRateApy}
               flowRatePerSecond={stream.flowRatePerSecond}
             />
+            {stream.maxClaimable > 0 && (
+              <div className="mt-2 text-sm font-medium text-neutral-500">
+                Total Vesting: ${stream.maxClaimable.toFixed(6)}
+              </div>
+            )}
             <div className="mt-8 max-w-lg">
               <p className="text-muted-foreground text-lg">
                 Your assets are generating yield in real-time. Watch your

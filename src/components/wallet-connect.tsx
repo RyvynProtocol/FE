@@ -9,21 +9,15 @@ import { cn } from '@/lib/utils';
 import { usePrivy, useWallets } from '@privy-io/react-auth';
 import { Loader2, LogOut, Wallet } from 'lucide-react';
 import { usePathname } from 'next/navigation';
-import { useEffect } from 'react';
 
 export function WalletConnect() {
   const pathname = usePathname();
   const { ready, authenticated, login, logout, linkWallet } = usePrivy();
+
   const { wallets } = useWallets();
 
   const connectedWallet = wallets[0];
   const isHome = pathname === '/';
-
-  useEffect(() => {
-    if (authenticated && connectedWallet) {
-      console.log('Connected wallet:', connectedWallet.address);
-    }
-  }, [authenticated, connectedWallet]);
 
   const handleLogin = async () => {
     if (!ready) return;

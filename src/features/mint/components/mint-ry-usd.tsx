@@ -10,7 +10,7 @@ import { AlertCircle, Info, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { formatUnits, parseUnits } from 'viem';
-import { useAccount } from 'wagmi';
+import { useAccount, usePublicClient } from 'wagmi';
 import { ModeToggle } from './node-toggle';
 import { TokenInput } from './token-input';
 
@@ -45,6 +45,12 @@ export default function MintRyUSD() {
     ? formatUnits(ryUSDBalance as bigint, 6)
     : '0.00';
 
+  const publicClient = usePublicClient();
+
+  const [processingStatus, setProcessingStatus] = useState<
+    'idle' | 'approving' | 'minting' | 'withdrawing'
+  >('idle');
+
   const handleTransaction = async () => {
     if (!authenticated) {
       toast.error('Please connect your wallet first');
@@ -64,19 +70,62 @@ export default function MintRyUSD() {
     try {
       if (isMintMode) {
         if (needsApproval) {
-          approveUSDC(amount);
+          setProcessingStatus('approving');
           toast.info('Approving USDC...');
-        } else {
-          mintRyUSD(amount);
-          toast.info('Minting ryUSD...');
+          const txHash = await approveUSDC(amount);
+
+          if (txHash && publicClient) {
+            toast.info('Waiting for approval confirmation...');
+            await publicClient.waitForTransactionReceipt({ hash: txHash });
+            toast.success('USDC Approved! Proceeding to mint...');
+          } else {
+            return;
+          }
+        }
+
+        setProcessingStatus('minting');
+        toast.info('Minting ryUSD...');
+        const mintHash = await mintRyUSD(amount);
+
+        if (mintHash && publicClient) {
+          toast.info('Waiting for confirmation...');
+          const receipt = await publicClient.waitForTransactionReceipt({
+            hash: mintHash,
+          });
+
+          if (receipt.status === 'success') {
+            toast.success('Mint successful! ryUSD received.');
+          } else {
+            toast.error('Mint transaction failed on-chain.');
+          }
         }
       } else {
-        withdrawRyUSD(amount);
+        setProcessingStatus('withdrawing');
         toast.info('Withdrawing USDC...');
+        const withdrawHash = await withdrawRyUSD(amount);
+
+        if (withdrawHash && publicClient) {
+          toast.info('Waiting for confirmation...');
+          const receipt = await publicClient.waitForTransactionReceipt({
+            hash: withdrawHash,
+          });
+
+          if (receipt.status === 'success') {
+            toast.success('Withdraw successful! USDC received.');
+          } else {
+            toast.error('Withdraw transaction failed on-chain.');
+          }
+        }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Transaction failed:', error);
-      toast.error('Transaction failed. Please try again.');
+      if (error.message?.toLowerCase()?.includes('user rejected')) {
+        toast.error('Transaction rejected by user');
+      } else {
+        toast.error('Transaction failed. Please try again.');
+      }
+    } finally {
+      setProcessingStatus('idle');
     }
   };
 
@@ -94,12 +143,12 @@ export default function MintRyUSD() {
   const getButtonText = () => {
     if (!authenticated) return 'Connect Wallet';
     if (isMintMode) {
-      return needsApproval ? 'Approve USDC' : 'Mint ryUSD';
+      return 'Mint ryUSD';
     }
     return 'Withdraw to USDC';
   };
 
-  const isLoading = isApproving || isDepositing || isWithdrawing;
+  const isLoading = processingStatus !== 'idle';
 
   return (
     <Card>
@@ -152,9 +201,9 @@ export default function MintRyUSD() {
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-              {isApproving
+              {processingStatus === 'approving'
                 ? 'Approving...'
-                : isDepositing
+                : processingStatus === 'minting'
                   ? 'Minting...'
                   : 'Withdrawing...'}
             </>
