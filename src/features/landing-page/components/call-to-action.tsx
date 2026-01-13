@@ -1,5 +1,6 @@
 'use client';
 
+import LightRays from '@/components/LightRays';
 import { motion, useScroll, useTransform } from 'motion/react';
 import Link from 'next/link';
 import { useRef } from 'react';
@@ -24,6 +25,26 @@ export default function CallToAction() {
       style={{ backgroundColor }}
       className="relative flex min-h-screen w-full flex-col items-center justify-center px-4 text-center"
     >
+      {/* LightRays Background */}
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+        <div className="relative h-full w-full">
+          <LightRays
+            raysOrigin="top-center"
+            raysColor="#f1f0e4"
+            raysSpeed={1}
+            lightSpread={1}
+            rayLength={2}
+            pulsating={false}
+            fadeDistance={1}
+            saturation={1}
+            followMouse
+            mouseInfluence={0.1}
+            noiseAmount={0}
+            distortion={0}
+          />
+        </div>
+      </div>
+
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden opacity-20 select-none">
         <div className="absolute size-[400px] rounded-full border border-white/40" />
         <div className="absolute size-[600px] rounded-full border border-white/40" />

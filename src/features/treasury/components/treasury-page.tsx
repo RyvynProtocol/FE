@@ -1,12 +1,15 @@
 'use client';
 
+import PixelBlast from '@/components/PixelBlast';
 import { PageContainer } from '@/components/page-container';
 import { Skeleton } from '@/components/ui/skeleton';
+import { fadeInItem, staggerContainer } from '@/lib/animations';
+import { motion } from 'motion/react';
 import { useTreasuryData } from '../hooks/use-treasury-data';
 import AssetAllocationChart from './asset-allocation-chart';
+import RewardFormulaBreakdown from './reward-formula-breakdown';
 import TreasuryStatsCard from './treasury-stats-card';
 import YieldBudgetWidget from './yield-budget-widget';
-import RewardFormulaBreakdown from './reward-formula-breakdown';
 
 export default function TreasuryPage() {
   const { assets, liquidity, yieldMetrics, isLoading } = useTreasuryData();
@@ -43,51 +46,82 @@ export default function TreasuryPage() {
 
   return (
     <PageContainer>
-      {/* Top Section: Big Text & Chart */}
-      <div className="grid min-h-[calc(100vh-200px)] grid-cols-1 gap-12 lg:grid-cols-2">
-        {/* Left Column: Header & Big Text */}
-        <div className="flex flex-col justify-end py-8">
-          <div className="mt-12 lg:mt-0">
-            <h2 className="text-3xl leading-tight font-extrabold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
-              TRANSPARENCY <br className="hidden md:block" />
-              <span className="text-muted-foreground">BUILDS TRUST.</span>
-            </h2>
-            <p className="text-muted-foreground mt-6 text-lg font-medium md:text-xl">
-              Verifiable on-chain assets backing every ryUSD in circulation.
-            </p>
-          </div>
+      {/* PixelBlast Background */}
+      <div className="pointer-events-none fixed inset-0 z-0 flex items-center justify-center overflow-hidden">
+        <div className="relative h-full w-full">
+          <PixelBlast
+            variant="circle"
+            pixelSize={3}
+            color="#064232"
+            patternScale={1.5}
+            patternDensity={1}
+            enableRipples={false}
+            rippleSpeed={0.3}
+            rippleThickness={0.1}
+            rippleIntensityScale={1}
+            speed={0.5}
+            transparent
+            edgeFade={0.5}
+          />
         </div>
+      </div>
 
-        {/* Right Column: Chart Only (Bottom Alignment) */}
-        <div className="flex flex-col justify-end">
-          <div className="flex items-center justify-center p-6 lg:justify-end">
-            <div className="w-full max-w-xl">
-              <AssetAllocationChart assets={assets} />
+      <motion.div
+        className="relative z-10"
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true }}
+      >
+        {/* Top Section: Big Text & Chart */}
+        <motion.div
+          className="grid min-h-[calc(100vh-200px)] grid-cols-1 gap-12 lg:grid-cols-2"
+          variants={fadeInItem}
+        >
+          {/* Left Column: Header & Big Text */}
+          <div className="flex flex-col justify-end py-8">
+            <div className="mt-12 lg:mt-0">
+              <h2 className="text-3xl leading-tight font-extrabold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
+                TRANSPARENCY <br className="hidden md:block" />
+                <span className="text-muted-foreground">BUILDS TRUST.</span>
+              </h2>
+              <p className="text-muted-foreground mt-6 text-lg font-medium md:text-xl">
+                Verifiable on-chain assets backing every ryUSD in circulation.
+              </p>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div className="py-12">
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
-          {/* Left: Yield Streaming */}
-          <YieldBudgetWidget metrics={yieldMetrics} />
-
-          {/* Right: Stats Card */}
-          <div className="lg:h-full">
-            <TreasuryStatsCard
-              liquidity={liquidity}
-              yieldMetrics={yieldMetrics}
-              assets={assets}
-            />
+          {/* Right Column: Chart Only (Bottom Alignment) */}
+          <div className="flex flex-col justify-end">
+            <div className="flex items-center justify-center p-6 lg:justify-end">
+              <div className="w-full max-w-xl">
+                <AssetAllocationChart assets={assets} />
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </motion.div>
 
-      {/* Formula Breakdown Section */}
-      <div className="py-12">
-        <RewardFormulaBreakdown />
-      </div>
+        <motion.div className="py-12" variants={fadeInItem}>
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
+            {/* Left: Yield Streaming */}
+            <YieldBudgetWidget metrics={yieldMetrics} />
+
+            {/* Right: Stats Card */}
+            <div className="lg:h-full">
+              <TreasuryStatsCard
+                liquidity={liquidity}
+                yieldMetrics={yieldMetrics}
+                assets={assets}
+              />
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Formula Breakdown Section */}
+        <motion.div className="py-12" variants={fadeInItem}>
+          <RewardFormulaBreakdown />
+        </motion.div>
+      </motion.div>
     </PageContainer>
   );
 }

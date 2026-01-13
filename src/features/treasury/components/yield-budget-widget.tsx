@@ -45,7 +45,7 @@ export default function YieldBudgetWidget({ metrics }: YieldBudgetWidgetProps) {
             Unallocated Yield Pool
           </p>
           <div className="flex items-baseline gap-1">
-            <span className="font-mono text-6xl font-bold tracking-tighter sm:text-7xl">
+            <span className="font-mono text-3xl font-bold tracking-tighter sm:text-7xl">
               $
               {metrics.unallocatedPool.toLocaleString('en-US', {
                 minimumFractionDigits: 4,
