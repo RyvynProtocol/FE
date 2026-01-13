@@ -72,7 +72,7 @@ export default function RewardFormulaBreakdown() {
           <div className="flex items-center justify-between rounded-lg border p-3">
             <div className="flex items-center gap-2">
               <div className="h-2 w-2 rounded-full bg-blue-500"></div>
-              <span className="text-sm">Hot Wallet</span>
+              <span className="text-sm">Unallocated Pool</span>
             </div>
             <span className="font-mono font-semibold">
               $

@@ -111,6 +111,50 @@ export default function TreasuryStatsCard({
             </div>
           </div>
 
+          {/* OUSG */}
+          {assets.find(a => a.id === 'ousg') && (
+            <div className="space-y-2">
+              <div className="flex justify-between text-xs">
+                <span className="text-muted-foreground">Ondo OUSG</span>
+                <span className="font-mono">
+                  {formatCompactNumber(
+                    assets.find(a => a.id === 'ousg')?.value || 0
+                  )}
+                </span>
+              </div>
+              <div className="bg-secondary relative h-2 w-full overflow-hidden rounded-full">
+                <div
+                  className="h-full w-full flex-1 bg-purple-500 transition-all"
+                  style={{
+                    transform: `translateX(-${100 - ((assets.find(a => a.id === 'ousg')?.value || 0) / totalTvl) * 100}%)`,
+                  }}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* USDY */}
+          {assets.find(a => a.id === 'usdy') && (
+            <div className="space-y-2">
+              <div className="flex justify-between text-xs">
+                <span className="text-muted-foreground">Ondo USDY</span>
+                <span className="font-mono">
+                  {formatCompactNumber(
+                    assets.find(a => a.id === 'usdy')?.value || 0
+                  )}
+                </span>
+              </div>
+              <div className="bg-secondary relative h-2 w-full overflow-hidden rounded-full">
+                <div
+                  className="h-full w-full flex-1 bg-blue-500 transition-all"
+                  style={{
+                    transform: `translateX(-${100 - ((assets.find(a => a.id === 'usdy')?.value || 0) / totalTvl) * 100}%)`,
+                  }}
+                />
+              </div>
+            </div>
+          )}
+
           {/* Lending Strategy */}
           <div className="space-y-2">
             <div className="flex justify-between text-xs">
@@ -121,7 +165,7 @@ export default function TreasuryStatsCard({
             </div>
             <div className="bg-secondary relative h-2 w-full overflow-hidden rounded-full">
               <div
-                className="bg-primary h-full w-full flex-1 transition-all"
+                className="h-full w-full flex-1 bg-amber-500 transition-all"
                 style={{
                   transform: `translateX(-${100 - (lendingPercent || 0)}%)`,
                 }}
