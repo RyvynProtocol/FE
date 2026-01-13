@@ -1,5 +1,6 @@
 'use client';
 
+import PixelBlast from '@/components/PixelBlast';
 import { PageContainer } from '@/components/page-container';
 import { fadeInItem, staggerContainer } from '@/lib/animations';
 import { motion } from 'motion/react';
@@ -9,8 +10,28 @@ import MintRyUSD from './mint-ry-usd';
 export default function MintPage() {
   return (
     <PageContainer>
+      {/* PixelBlast Background */}
+      <div className="pointer-events-none fixed inset-0 z-0 flex items-center justify-center overflow-hidden">
+        <div className="relative h-full w-full">
+          <PixelBlast
+            variant="circle"
+            pixelSize={3}
+            color="#064232"
+            patternScale={1.5}
+            patternDensity={1}
+            enableRipples={false}
+            rippleSpeed={0.3}
+            rippleThickness={0.1}
+            rippleIntensityScale={1}
+            speed={0.5}
+            transparent
+            edgeFade={0.5}
+          />
+        </div>
+      </div>
+
       <motion.div
-        className="grid min-h-[calc(100vh-200px)] grid-cols-1 gap-12 lg:grid-cols-2"
+        className="relative z-10 grid min-h-[calc(100vh-200px)] grid-cols-1 gap-12 lg:grid-cols-2"
         variants={staggerContainer}
         initial="hidden"
         whileInView="show"
