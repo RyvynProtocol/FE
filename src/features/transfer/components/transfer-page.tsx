@@ -1,12 +1,25 @@
+'use client';
+
 import { PageContainer } from '@/components/page-container';
 import TransferRyUSD from '@/features/transfer/components/transfer-ry-usd';
+import { fadeInItem, staggerContainer } from '@/lib/animations';
+import { motion } from 'motion/react';
 
 export default function TransferPage() {
   return (
     <PageContainer>
-      <div className="grid min-h-[calc(100vh-200px)] grid-cols-1 gap-12 lg:grid-cols-2">
+      <motion.div
+        className="grid min-h-[calc(100vh-200px)] grid-cols-1 gap-12 lg:grid-cols-2"
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true }}
+      >
         {/* Left Column */}
-        <div className="flex flex-col justify-between py-8">
+        <motion.div
+          className="flex flex-col justify-between py-8"
+          variants={fadeInItem}
+        >
           {/* Top: Header */}
           <div>
             <h1 className="text-2xl font-bold tracking-tighter uppercase sm:text-3xl">
@@ -25,15 +38,18 @@ export default function TransferPage() {
               on every transaction.
             </p>
           </div>
-        </div>
+        </motion.div>
 
         {/* Right Column: Transfer Card */}
-        <div className="flex items-center justify-center lg:items-end lg:justify-end">
+        <motion.div
+          className="flex items-center justify-center lg:items-end lg:justify-end"
+          variants={fadeInItem}
+        >
           <div className="w-full max-w-md">
             <TransferRyUSD />
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </PageContainer>
   );
 }

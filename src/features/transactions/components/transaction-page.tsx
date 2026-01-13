@@ -1,16 +1,18 @@
 'use client';
 
-import { useState } from 'react';
 import { PageContainer } from '@/components/page-container';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useTransactionHistory } from '../hooks/use-transaction-history';
-import TransactionTable from './transaction-table';
-import TransactionFiltersComponent from './transaction-filters';
-import { TransactionFilters } from '../types';
-import { useAccount } from 'wagmi';
-import { Button } from '@/components/ui/button';
+import { fadeInItem, staggerContainer } from '@/lib/animations';
 import { RefreshCw } from 'lucide-react';
+import { motion } from 'motion/react';
+import { useState } from 'react';
+import { useAccount } from 'wagmi';
+import { useTransactionHistory } from '../hooks/use-transaction-history';
+import { TransactionFilters } from '../types';
+import TransactionFiltersComponent from './transaction-filters';
+import TransactionTable from './transaction-table';
 
 export default function TransactionPage() {
   const { address, isConnected } = useAccount();
@@ -54,9 +56,18 @@ export default function TransactionPage() {
 
   return (
     <PageContainer>
-      <div className="space-y-6 py-8">
+      <motion.div
+        className="space-y-6 py-8"
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true }}
+      >
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <motion.div
+          className="flex items-center justify-between"
+          variants={fadeInItem}
+        >
           <div>
             <h1 className="text-4xl font-bold tracking-tight">
               Transaction History
@@ -70,61 +81,25 @@ export default function TransactionPage() {
             <RefreshCw className="mr-2 h-4 w-4" />
             Refresh
           </Button>
-        </div>
+        </motion.div>
 
         {/* Filters */}
-        <TransactionFiltersComponent onFiltersChange={setFilters} />
-
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                Total Transactions
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold">{transactions.length}</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                Total Mints
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold">
-                {transactions.filter((tx) => tx.type === 'mint').length}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                Total Claims
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold">
-                {transactions.filter((tx) => tx.type === 'claim').length}
-              </p>
-            </CardContent>
-          </Card>
-        </div>
+        <motion.div variants={fadeInItem}>
+          <TransactionFiltersComponent onFiltersChange={setFilters} />
+        </motion.div>
 
         {/* Transaction Table */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Transactions</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <TransactionTable transactions={transactions} />
-          </CardContent>
-        </Card>
-      </div>
+        <motion.div variants={fadeInItem}>
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Transactions</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <TransactionTable transactions={transactions} />
+            </CardContent>
+          </Card>
+        </motion.div>
+      </motion.div>
     </PageContainer>
   );
 }

@@ -2,6 +2,8 @@
 
 import { PageContainer } from '@/components/page-container';
 import { Skeleton } from '@/components/ui/skeleton';
+import { fadeInItem, staggerContainer } from '@/lib/animations';
+import { motion } from 'motion/react';
 import { useRewardData } from '../hooks/use-reward-data';
 import ClaimActionCard from './claim-action-card';
 import ClaimableBalanceTicker from './claimable-balance-ticker';
@@ -25,9 +27,18 @@ export default function RewardDashboard() {
 
   return (
     <PageContainer>
-      <div className="grid min-h-[calc(100vh-200px)] grid-cols-1 gap-12 lg:grid-cols-2">
+      <motion.div
+        className="grid min-h-[calc(100vh-200px)] grid-cols-1 gap-12 lg:grid-cols-2"
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true }}
+      >
         {/* Left Column: Hero Text & Ticker */}
-        <div className="flex flex-col justify-center py-8">
+        <motion.div
+          className="flex flex-col justify-center py-8"
+          variants={fadeInItem}
+        >
           <div>
             <h1 className="text-primary mb-12 text-2xl font-bold tracking-tighter uppercase sm:text-3xl">
               My Rewards
@@ -44,9 +55,12 @@ export default function RewardDashboard() {
               </p>
             </div>
           </div>
-        </div>
+        </motion.div>
         {/* Right Column: Action Card */}
-        <div className="flex items-center justify-center lg:justify-end">
+        <motion.div
+          className="flex items-center justify-center lg:justify-end"
+          variants={fadeInItem}
+        >
           <div className="w-full max-w-md">
             <ClaimActionCard
               balance={stream.claimableBalance}
@@ -54,8 +68,8 @@ export default function RewardDashboard() {
               claimTx={claimTx}
             />
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </PageContainer>
   );
 }

@@ -1,8 +1,10 @@
-import { useState } from 'react';
+'use client';
+
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-import { Search, Filter } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Filter, Search } from 'lucide-react';
+import { useState } from 'react';
 import { TransactionFilters, TransactionType } from '../types';
 
 interface TransactionFiltersProps {
@@ -46,12 +48,12 @@ export default function TransactionFiltersComponent({
     <Card className="p-4">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         {/* Search Input */}
-        <div className="relative flex-1 max-w-sm">
-          <Search className="text-muted-foreground absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
+        <div className="relative max-w-sm flex-1">
+          <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
           <Input
             placeholder="Search by transaction hash..."
             value={searchQuery}
-            onChange={(e) => handleSearchChange(e.target.value)}
+            onChange={e => handleSearchChange(e.target.value)}
             className="pl-10"
           />
         </div>
@@ -60,7 +62,7 @@ export default function TransactionFiltersComponent({
         <div className="flex items-center gap-2">
           <Filter className="text-muted-foreground h-4 w-4" />
           <div className="flex flex-wrap gap-2">
-            {TRANSACTION_TYPES.map((type) => (
+            {TRANSACTION_TYPES.map(type => (
               <Button
                 key={type.value}
                 variant={selectedType === type.value ? 'default' : 'outline'}
