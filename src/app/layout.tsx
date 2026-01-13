@@ -20,6 +20,9 @@ export const metadata: Metadata = {
   title: 'RYVYN | Stablecoin with Built-in Yield Rewards',
   description:
     'Earn rewards on every transfer. The stablecoin that pays you to use it.',
+  icons: {
+    icon: '/logo.png',
+  },
 };
 
 export default function RootLayout({
