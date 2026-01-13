@@ -1,4 +1,4 @@
-# USDC-B - Stablecoin with Built-in Yield Rewards
+# RYVYN - Stablecoin with Built-in Yield Rewards
 
 A revolutionary stablecoin platform that rewards users on every transfer with real-world asset-backed yields.
 
@@ -36,7 +36,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## UI Components
 
 - **StatCard**: Display key metrics with gradients and trends
-- **TransferCard**: Send USDC-B with live reward preview
+- **TransferCard**: Send ryUSD with live reward preview
 - **StreamBondsCard**: View and manage your Stream Bonds
 - **TreasuryCard**: Real-time treasury allocation and yields
 - **TierCard**: Track progress through reward tiers
@@ -56,7 +56,7 @@ The UI is inspired by Fluidity's clean and modern aesthetic:
 
 This is a UI-only implementation. To make it functional, integrate with:
 
-- USDC-B smart contract for token transfers
+- ryUSD smart contract for token transfers
 - YieldTreasury contract for treasury data
 - StreamBond contract for bond management
 - RewardDistributor for calculating rewards

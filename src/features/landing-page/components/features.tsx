@@ -42,6 +42,7 @@ export default function Features() {
 
   return (
     <motion.section
+      id="features"
       ref={containerRef}
       className="relative h-[300vh] bg-zinc-900"
       style={{ backgroundColor }}
