@@ -4,7 +4,6 @@ import { WalletConnect } from '@/components/wallet-connect';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { NetworkSwitcher } from './network-switcher';
 
 export default function Navbar() {
   const [isVisible, setIsVisible] = useState(true);
@@ -71,7 +70,6 @@ export default function Navbar() {
 
           {/* Right: Actions */}
           <div className="flex items-center space-x-2">
-            <NetworkSwitcher />
             <WalletConnect />
           </div>
         </nav>
