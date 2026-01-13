@@ -1,13 +1,19 @@
+import Lenis from '@/components/lenis';
 import Navbar from '@/components/navbar';
 import { Toaster } from '@/components/ui/sonner';
 import { PrivyProvider } from '@/providers/PrivyProvider';
 import type { Metadata } from 'next';
-import { Figtree } from 'next/font/google';
+import { Figtree, Outfit } from 'next/font/google';
 import './globals.css';
 
 const figtree = Figtree({
   subsets: ['latin'],
   variable: '--font-sans',
+});
+
+const outfit = Outfit({
+  subsets: ['latin'],
+  variable: '--font-outfit',
 });
 
 export const metadata: Metadata = {
@@ -23,7 +29,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`antialiased ${figtree.className}`}>
+      <body className={`antialiased ${figtree.className} ${outfit.variable}`}>
+        <Lenis />
         <PrivyProvider>
           <Navbar />
           {children}
