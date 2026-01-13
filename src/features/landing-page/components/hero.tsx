@@ -102,7 +102,7 @@ export default function Hero() {
           {/* Subtitle/CTA - Fades out together */}
           <motion.div style={{ opacity: contentOpacity }}>
             <p className="mt-8 max-w-xl text-lg font-medium text-white/60 md:text-xl">
-              We're your stablecoin that pays you to use it.
+              We&apos;re your stablecoin that pays you to use it.
             </p>
 
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
