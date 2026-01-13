@@ -36,7 +36,7 @@ export default function RewardDashboard() {
       >
         {/* Left Column: Hero Text & Ticker */}
         <motion.div
-          className="flex flex-col justify-center py-8"
+          className="flex flex-col justify-end py-8"
           variants={fadeInItem}
         >
           <div>
@@ -58,7 +58,7 @@ export default function RewardDashboard() {
         </motion.div>
         {/* Right Column: Action Card */}
         <motion.div
-          className="flex items-center justify-center lg:justify-end"
+          className="flex items-center justify-center lg:items-end lg:justify-end"
           variants={fadeInItem}
         >
           <div className="w-full max-w-md">

@@ -44,7 +44,7 @@ export default function Navbar() {
       <div className="p-3 md:px-9 md:py-6">
         <nav
           className={cn(
-            'pointer-events-auto relative flex flex-col items-center justify-between rounded-2xl px-4 py-3 shadow-lg md:flex-row md:rounded-4xl md:px-6 md:py-4 md:pl-8',
+            'pointer-events-auto relative flex flex-col items-center justify-between rounded-2xl px-4 py-3 shadow-lg transition-colors duration-300 md:flex-row md:rounded-4xl md:px-6 md:py-4 md:pl-8',
             isHome
               ? 'bg-background text-secondary'
               : 'bg-secondary text-background'
