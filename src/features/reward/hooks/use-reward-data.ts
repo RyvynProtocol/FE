@@ -50,7 +50,6 @@ export function useRewardData(): UseRewardDataReturn {
   const [claimTx, setClaimTx] = useState<ClaimTransaction>({ status: 'idle' });
   const hasShownSuccessToast = useRef(false);
 
-  // Read pending ryBOND balance (includes accrued yield)
   const {
     data: pendingBalance,
     refetch: refetchPending,
@@ -64,17 +63,8 @@ export function useRewardData(): UseRewardDataReturn {
     chainId: 5003,
     query: {
       enabled: !!address,
-      // Remove refetchInterval - we'll handle streaming on client side
     },
   });
-
-  // Debug logging
-  console.log('=== ryBOND Read Debug ===');
-  console.log('Wallet Address:', address);
-  console.log('ryBOND Contract:', CONTRACTS.ryBOND);
-  console.log('isLoadingBalance:', isLoadingBalance);
-  console.log('balanceError:', balanceError);
-  console.log('pendingBalance:', pendingBalance);
 
   // Read yield rate per second
   const { data: yieldRate } = useReadContract({
@@ -91,8 +81,6 @@ export function useRewardData(): UseRewardDataReturn {
     functionName: 'vault',
     chainId: 5003,
   });
-
-  console.log('Vault address:', vaultAddress);
 
   // Claim function
   const {
@@ -117,14 +105,6 @@ export function useRewardData(): UseRewardDataReturn {
       const flowRate = yieldRate
         ? Number(formatUnits(yieldRate as bigint, 18))
         : 0;
-
-      console.log('=== ryBOND Balance Update ===');
-      console.log('Address:', address);
-      console.log('Contract:', CONTRACTS.ryBOND);
-      console.log('Raw pendingBalance:', pendingBalance?.toString());
-      console.log('Formatted balance:', balance);
-      console.log('Raw yieldRate:', yieldRate?.toString());
-      console.log('Formatted flowRate:', flowRate);
 
       // Calculate APY from yield rate
       // yieldRate is per second, so: APY = flowRate * 365 * 24 * 60 * 60 / balance * 100
