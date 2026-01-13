@@ -10,7 +10,7 @@ import { Loader2, LogOut, Wallet } from 'lucide-react';
 import { useEffect } from 'react';
 
 export function WalletConnect() {
-  const { ready, authenticated, login, logout } = usePrivy();
+  const { ready, authenticated, login, logout, linkWallet } = usePrivy();
   const { wallets } = useWallets();
 
   const connectedWallet = wallets[0];
@@ -23,7 +23,11 @@ export function WalletConnect() {
 
   const handleLogin = async () => {
     if (!ready) return;
-    await login();
+    if (authenticated) {
+      await linkWallet();
+    } else {
+      await login();
+    }
   };
 
   const handleLogout = async () => {
@@ -75,7 +79,7 @@ export function WalletConnect() {
       onClick={handleLogin}
       className="bg-secondary-foreground text-secondary hover:bg-secondary-foreground/90 h-12 rounded-2xl px-8 text-base font-semibold transition-all hover:scale-105"
     >
-      Connect Wallet
+      {authenticated ? 'Link Wallet' : 'Connect Wallet'}
     </Button>
   );
 }
