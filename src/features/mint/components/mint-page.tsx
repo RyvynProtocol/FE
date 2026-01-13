@@ -1,6 +1,6 @@
 import { PageContainer } from '@/components/page-container';
-import MintRyUSD from './mint-ry-usd';
 import { Faucet } from './faucet';
+import MintRyUSD from './mint-ry-usd';
 
 export default function MintPage() {
   return (
@@ -12,7 +12,7 @@ export default function MintPage() {
           <div>
             <h1 className="text-2xl font-bold tracking-tighter uppercase sm:text-3xl">
               Mint RyUSD
-            </h1>  
+            </h1>
           </div>
 
           {/* Bottom: Copywriting */}
@@ -31,8 +31,8 @@ export default function MintPage() {
         {/* Right Column: Mint Card */}
         <div className="flex items-center justify-center lg:items-end lg:justify-end">
           <div className="w-full max-w-md">
-            <Faucet />
             <MintRyUSD />
+            <Faucet />
           </div>
         </div>
       </div>
