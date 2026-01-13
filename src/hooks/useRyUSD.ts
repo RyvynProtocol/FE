@@ -31,19 +31,19 @@ export function useRyUSD() {
   });
 
   const {
-    writeContract: approve,
+    writeContractAsync: approveAsync,
     isPending: isApproving,
     data: approveTxHash,
   } = useWriteContract();
 
   const {
-    writeContract: deposit,
+    writeContractAsync: depositAsync,
     isPending: isDepositing,
     data: depositTxHash,
   } = useWriteContract();
 
   const {
-    writeContract: withdraw,
+    writeContractAsync: withdrawAsync,
     isPending: isWithdrawing,
     data: withdrawTxHash,
   } = useWriteContract();
@@ -103,7 +103,7 @@ export function useRyUSD() {
     const isCorrectChain = await checkChain();
     if (!isCorrectChain) return;
 
-    approve({
+    return approveAsync({
       address: CONTRACTS.mockUSDC as `0x${string}`,
       abi: MockUSDCABI,
       functionName: 'approve',
@@ -116,7 +116,7 @@ export function useRyUSD() {
     const isCorrectChain = await checkChain();
     if (!isCorrectChain) return;
 
-    deposit({
+    return depositAsync({
       address: CONTRACTS.ryUSD as `0x${string}`,
       abi: RyUSDABI,
       functionName: 'deposit',
@@ -129,7 +129,7 @@ export function useRyUSD() {
     const isCorrectChain = await checkChain();
     if (!isCorrectChain) return;
 
-    withdraw({
+    return withdrawAsync({
       address: CONTRACTS.ryUSD as `0x${string}`,
       abi: RyUSDABI,
       functionName: 'withdraw',
@@ -147,5 +147,8 @@ export function useRyUSD() {
     isApproving: isApproving || isApprovingConfirm,
     isDepositing: isDepositing || isDepositingConfirm,
     isWithdrawing: isWithdrawing || isWithdrawingConfirm,
+    approveTxHash,
+    depositTxHash,
+    withdrawTxHash,
   };
 }
