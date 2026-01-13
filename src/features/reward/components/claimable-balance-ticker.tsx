@@ -31,25 +31,23 @@ export default function ClaimableBalanceTicker({
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <h3 className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
-            Pending Yield
+        <h3 className="text-muted-foreground text-sm font-medium tracking-wider uppercase">
+          Pending Yield
         </h3>
-        <div className="text-5xl font-extrabold tracking-tight sm:text-6xl md:text-7xl tabular-nums">
-            {formattedBalance}
+        <div className="text-5xl font-extrabold tracking-tight tabular-nums sm:text-6xl md:text-7xl">
+          {formattedBalance}
         </div>
       </div>
 
-      {earningsRateApy !== undefined && (
-          <div className="flex items-center gap-2 text-green-600 dark:text-green-400 font-medium">
-            <ArrowUpRight className="h-5 w-5" />
-            <span>
-                {earningsRateApy.toFixed(2)}% APY
-            </span>
-            <span className="text-muted-foreground font-normal">
-                (≈${dailyEarnings.toFixed(2)} / day)
-            </span>
-          </div>
-      )}
+      <div className="flex items-center gap-2 font-medium text-green-600 dark:text-green-400">
+        <ArrowUpRight className="h-5 w-5" />
+        {earningsRateApy && earningsRateApy > 0 ? (
+          <span>{earningsRateApy.toFixed(2)}% APY</span>
+        ) : null}
+        <span className="text-muted-foreground font-normal">
+          (≈${dailyEarnings.toFixed(2)} / day)
+        </span>
+      </div>
     </div>
   );
 }

@@ -17,6 +17,7 @@ export type RewardStream = {
   claimableBalance: number; // Current available USD value
   earningsRateApy: number; // Static APY
   flowRatePerSecond: number; // USD earning per second
+  maxClaimable: number; // Max possible reward (vested + locked)
   lastUpdated: number; // Timestamp
   isStreaming: boolean; // Active state
 };
@@ -44,6 +45,7 @@ export function useRewardData(): UseRewardDataReturn {
     claimableBalance: 0,
     earningsRateApy: 0,
     flowRatePerSecond: 0,
+    maxClaimable: 0,
     lastUpdated: Date.now(),
     isStreaming: true,
   });
@@ -54,7 +56,6 @@ export function useRewardData(): UseRewardDataReturn {
     data: pendingBalance,
     refetch: refetchPending,
     isLoading: isLoadingBalance,
-    error: balanceError,
   } = useReadContract({
     address: CONTRACTS.ryBOND as `0x${string}`,
     abi: RyBONDABI,
@@ -66,20 +67,28 @@ export function useRewardData(): UseRewardDataReturn {
     },
   });
 
-  // Read yield rate per second
-  const { data: yieldRate } = useReadContract({
+  // Read user-specific flow rate for vesting (per second)
+  const { data: flowRateData } = useReadContract({
     address: CONTRACTS.ryBOND as `0x${string}`,
     abi: RyBONDABI,
-    functionName: 'yieldRatePerSecond',
+    functionName: 'getFlowRate',
+    args: address ? [address] : undefined,
     chainId: 5003,
+    query: {
+      enabled: !!address,
+    },
   });
 
-  // Read vault address from ryBOND contract
-  const { data: vaultAddress } = useReadContract({
+  // Read userInfo to get total max cap (vested + locked)
+  const { data: userInfoData, refetch: refetchUserInfo } = useReadContract({
     address: CONTRACTS.ryBOND as `0x${string}`,
     abi: RyBONDABI,
-    functionName: 'vault',
+    functionName: 'userInfo',
+    args: address ? [address] : undefined,
     chainId: 5003,
+    query: {
+      enabled: !!address,
+    },
   });
 
   // Claim function
@@ -101,52 +110,68 @@ export function useRewardData(): UseRewardDataReturn {
   // Update stream state when balance changes from contract
   useEffect(() => {
     if (pendingBalance !== undefined) {
-      const balance = Number(formatUnits(pendingBalance as bigint, 6));
-      const flowRate = yieldRate
-        ? Number(formatUnits(yieldRate as bigint, 18))
-        : 0;
+      const balanceVal = Number(formatUnits(pendingBalance as bigint, 6));
 
-      // Calculate APY from yield rate
-      // yieldRate is per second, so: APY = flowRate * 365 * 24 * 60 * 60 / balance * 100
-      const apy =
-        balance > 0 && flowRate > 0
-          ? ((flowRate * 31536000) / balance) * 100
-          : 0;
+      let flowRateVal = 0;
+      if (flowRateData) {
+        flowRateVal = Number(formatUnits(flowRateData as bigint, 24));
+      }
 
-      setStream({
-        claimableBalance: balance,
-        earningsRateApy: apy,
-        flowRatePerSecond: flowRate,
+      setStream(prev => ({
+        ...prev,
+        claimableBalance: balanceVal,
+        earningsRateApy: 0,
+        flowRatePerSecond: flowRateVal,
         lastUpdated: Date.now(),
-        isStreaming: balance > 0,
-      });
+        isStreaming: flowRateVal > 0,
+      }));
     }
-  }, [pendingBalance, yieldRate, address]);
+  }, [pendingBalance, flowRateData, address]);
+
+  // Update max claimable from userInfo
+  useEffect(() => {
+    if (userInfoData) {
+      const info = userInfoData as any;
+      const locked = info.lockedBalance || info[0];
+      const vested = info.vestedBalance || info[1];
+
+      if (locked !== undefined && vested !== undefined) {
+        const totalMax = Number(formatUnits(locked + vested, 6)); // Using 6 decimals as established
+        setStream(prev => ({
+          ...prev,
+          maxClaimable: totalMax,
+        }));
+      }
+    }
+  }, [userInfoData]);
 
   // Client-side streaming: update balance every second based on flow rate
   useEffect(() => {
-    if (
-      !stream.isStreaming ||
-      stream.flowRatePerSecond <= 0 ||
-      stream.claimableBalance <= 0
-    )
-      return;
+    if (!stream.isStreaming || stream.flowRatePerSecond <= 0) return;
 
     const interval = setInterval(() => {
       setStream(prev => {
-        // Don't increment if balance is already 0 (after claim)
-        if (prev.claimableBalance <= 0) return prev;
+        const nextBalance = prev.claimableBalance + prev.flowRatePerSecond;
+        const cappedBalance =
+          prev.maxClaimable > 0 && nextBalance > prev.maxClaimable
+            ? prev.maxClaimable
+            : nextBalance;
 
         return {
           ...prev,
-          claimableBalance: prev.claimableBalance + prev.flowRatePerSecond,
+          claimableBalance: cappedBalance,
           lastUpdated: Date.now(),
+          // Stop streaming if we hit the cap
+          isStreaming:
+            prev.maxClaimable > 0
+              ? cappedBalance < prev.maxClaimable
+              : prev.isStreaming,
         };
       });
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [stream.isStreaming, stream.flowRatePerSecond, stream.claimableBalance]);
+  }, [stream.isStreaming, stream.flowRatePerSecond]);
 
   // Handle claim success
   useEffect(() => {
@@ -174,11 +199,12 @@ export function useRewardData(): UseRewardDataReturn {
 
       // Refetch to get accurate balance from blockchain
       refetchPending();
+      refetchUserInfo();
 
       // Reset to idle after 5 seconds and resume streaming
       setTimeout(() => {
         setClaimTx({ status: 'idle' });
-        hasShownSuccessToast.current = false; // Reset for next claim
+        // hasShownSuccessToast.current = false; // MOVED to claimReward to prevent loop
 
         // Resume streaming if there's any new balance
         setStream(prev => ({
@@ -187,7 +213,13 @@ export function useRewardData(): UseRewardDataReturn {
         }));
       }, 5000);
     }
-  }, [isClaimSuccess, claimTxHash, stream.claimableBalance, refetchPending]);
+  }, [
+    isClaimSuccess,
+    claimTxHash,
+    stream.claimableBalance,
+    refetchPending,
+    refetchUserInfo,
+  ]);
 
   // Handle claim pending
   useEffect(() => {
@@ -203,6 +235,13 @@ export function useRewardData(): UseRewardDataReturn {
       const errorMessage = error?.message || 'Claim failed';
 
       console.error('Claim error:', error);
+      // Detailed logging for debugging
+      if (error && 'cause' in error)
+        console.error('Error cause:', (error as any).cause);
+      if (error && 'details' in error)
+        console.error('Error details:', (error as any).details);
+      if (error && 'shortMessage' in error)
+        console.error('Short message:', (error as any).shortMessage);
 
       // Check for specific error types
       if (errorMessage.includes('out of gas')) {
@@ -226,6 +265,9 @@ export function useRewardData(): UseRewardDataReturn {
   }, [claimError, receiptError]);
 
   const claimReward = async () => {
+    // Reset intent for new claim to allow success logic to trigger again
+    hasShownSuccessToast.current = false;
+
     if (!address) {
       toast.error('Please connect your wallet');
       return;
