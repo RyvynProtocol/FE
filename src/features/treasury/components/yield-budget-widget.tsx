@@ -30,9 +30,9 @@ export default function YieldBudgetWidget({ metrics }: YieldBudgetWidgetProps) {
             <TooltipContent className="max-w-[300px]">
               <p className="mb-2 font-semibold">Smoothed Yield Budget</p>
               <p className="text-sm">
-                The protocol calculates a smoothed reward rate based on the
-                Unallocated Yield Pool and moving average transfer volume. This
-                protects against dilution and ensures deterministic returns.
+                The protocol calculates a smoothed reward rate based on the Hot
+                Wallet and moving average transfer volume. This protects against
+                dilution and ensures deterministic returns.
               </p>
             </TooltipContent>
           </Tooltip>
@@ -53,13 +53,6 @@ export default function YieldBudgetWidget({ metrics }: YieldBudgetWidgetProps) {
               })}
             </span>
           </div>
-          <p className="mt-2 flex items-center gap-2 text-base text-green-600 dark:text-green-400">
-            <span className="relative flex h-3 w-3">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
-              <span className="relative inline-flex h-3 w-3 rounded-full bg-green-500"></span>
-            </span>
-            Live visualization
-          </p>
         </div>
 
         <div className="bg-muted/50 rounded-xl p-6">

@@ -34,7 +34,7 @@ export default function TreasuryPage() {
         </div>
 
         {/* Second Section Skeleton */}
-        <div className="py-12">
+        <div className="py-5">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
             <Skeleton className="h-[400px] w-full rounded-xl" />
             <Skeleton className="h-[400px] w-full rounded-xl" />
