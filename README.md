@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
-# USDC-B - Stablecoin with Built-in Yield Rewards
-=======
 # RYVYN Protocol - Frontend
->>>>>>> Stashed changes
 
 A revolutionary stablecoin platform that rewards users on every transfer with real-world asset-backed yields. This is the frontend application for the RYVYN Protocol.
 
@@ -78,47 +74,22 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ### Other Commands
 
-<<<<<<< Updated upstream
-- **StatCard**: Display key metrics with gradients and trends
-- **TransferCard**: Send USDC-B with live reward preview
-- **StreamBondsCard**: View and manage your Stream Bonds
-- **TreasuryCard**: Real-time treasury allocation and yields
-- **TierCard**: Track progress through reward tiers
-- **TransactionHistory**: Complete transaction log with rewards
-=======
 ```bash
 # Build for production
 pnpm build
->>>>>>> Stashed changes
 
 # Start production server
 pnpm start
 
-<<<<<<< Updated upstream
-The UI is inspired by Fluidity's clean and modern aesthetic:
-- Glass morphism effects
-- Gradient accents
-- Smooth animations
-- Dark theme with pops of color
-- Clear data visualization
-=======
 # Run linting
 pnpm lint
 
 # Check TypeScript types
 pnpm check-types
 ```
->>>>>>> Stashed changes
 
 ## 🎨 Design Philosophy
 
-<<<<<<< Updated upstream
-This is a UI-only implementation. To make it functional, integrate with:
-- USDC-B smart contract for token transfers
-- YieldTreasury contract for treasury data
-- StreamBond contract for bond management
-- RewardDistributor for calculating rewards
-=======
 The UI features a modern, premium aesthetic:
 
 - Dark theme with vibrant color accents
@@ -126,7 +97,6 @@ The UI features a modern, premium aesthetic:
 - Smooth scroll-based animations
 - Interactive 3D elements
 - Responsive design
->>>>>>> Stashed changes
 
 ## 🔗 Smart Contracts
 
