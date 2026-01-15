@@ -3,11 +3,40 @@
 import LightRays from '@/components/LightRays';
 import { Button } from '@/components/ui/button';
 import { motion, useScroll, useTransform } from 'motion/react';
-import Link from 'next/link';
 import { useRef } from 'react';
 
 export default function Hero() {
   const containerRef = useRef<HTMLElement>(null);
+
+  const scrollToFeatures = () => {
+    const targetElement = document.getElementById('features');
+    if (!targetElement) return;
+
+    const duration = 3000;
+    const start = window.scrollY;
+    const end = targetElement.offsetTop + 300;
+    const distance = end - start;
+    let startTime: number | null = null;
+
+    const easeInOutQuad = (t: number) => {
+      return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    };
+
+    const animateScroll = (currentTime: number) => {
+      if (startTime === null) startTime = currentTime;
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easedProgress = easeInOutQuad(progress);
+
+      window.scrollTo(0, start + distance * easedProgress);
+
+      if (progress < 1) {
+        requestAnimationFrame(animateScroll);
+      }
+    };
+
+    requestAnimationFrame(animateScroll);
+  };
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -102,18 +131,17 @@ export default function Hero() {
           {/* Subtitle/CTA - Fades out together */}
           <motion.div style={{ opacity: contentOpacity }}>
             <p className="mt-8 max-w-xl text-lg font-medium text-white/60 md:text-xl">
-              We&apos;re your stablecoin that pays you to use it.
+              We&apos;re the stablecoin that pays you to use it.
             </p>
 
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Link href="/dashboard">
-                <Button
-                  size="lg"
-                  className="h-12 rounded-full bg-white px-8 text-base font-semibold text-black hover:bg-white/90"
-                >
-                  Get Started
-                </Button>
-              </Link>
+              <Button
+                size="lg"
+                onClick={scrollToFeatures}
+                className="h-12 rounded-full bg-white px-8 text-base font-semibold text-black hover:bg-white/90"
+              >
+                Get Started
+              </Button>
             </div>
           </motion.div>
         </div>

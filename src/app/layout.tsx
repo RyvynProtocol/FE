@@ -17,9 +17,12 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: 'USDC-B | Stablecoin with Built-in Yield Rewards',
+  title: 'RYVYN | Stablecoin with Built-in Yield Rewards',
   description:
     'Earn rewards on every transfer. The stablecoin that pays you to use it.',
+  icons: {
+    icon: '/logo.png',
+  },
 };
 
 export default function RootLayout({

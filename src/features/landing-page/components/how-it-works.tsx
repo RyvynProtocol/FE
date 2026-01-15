@@ -18,15 +18,15 @@ const steps = [
   },
   {
     id: '03',
-    title: 'Yield Generation',
+    title: 'Make Transactions',
     description:
-      'The underlying assets generate consistent, risk-free interest. Unlike speculative tokens, this yield comes from established financial markets.',
+      'Every transaction earns a reward, split between sender and receiver.',
   },
   {
     id: '04',
-    title: 'Stream Distribution',
+    title: 'Yield Generation',
     description:
-      'Yield is streamed directly to your wallet every second via Stream Bonds (ryBOND). You can claim your accumulated earnings at any time.',
+      'The underlying assets generate consistent, risk-free interest. Unlike speculative tokens, this yield comes from established financial markets.',
   },
 ];
 

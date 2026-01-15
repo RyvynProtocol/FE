@@ -8,22 +8,22 @@ const FEATURES = [
     id: '01',
     title: 'REAL WORLD ASSETS',
     description:
-      "Ryvyn turns 'Idle Money' into 'Working Capital' without speculative risk. Backed by the safest assets in the world: 60% US T-Bills and 25% Corporate Bonds.",
+      "Ryvyn turns 'Idle Money' into 'Working Capital' without speculative risk. Backed by real world assets.",
     color: '#4c1d95', // violet-900
   },
   {
     id: '02',
     title: 'PROFITABLE PAYMENTS',
     description:
-      'Gamified investment with deterministic rewards. Every transaction earns a reward, split between sender and receiver. Stop playing lotteries, start earning yield.',
-    color: '#165a4c', // teal-900
+      'Every transaction earns a reward, split between sender and receiver.',
+    color: '#be185d', // pink-700
   },
   {
     id: '03',
     title: 'STREAM BONDS',
     description:
       'Sustainable yield that streams over time using Stream Bonds (ryBOND). Claim your yield as it drips every second, driving long-term retention and stability.',
-    color: '#be185d', // pink-700
+    color: '#165a4c', // teal-900
   },
 ];
 
@@ -42,6 +42,7 @@ export default function Features() {
 
   return (
     <motion.section
+      id="features"
       ref={containerRef}
       className="relative h-[300vh] bg-zinc-900"
       style={{ backgroundColor }}
@@ -153,21 +154,18 @@ function Card({
         </div>
 
         <div className="mt-6 space-y-4">
-          <h3 className="text-lg font-bold">We play by the rules.</h3>
-          <p className="text-sm leading-relaxed text-white/80">
+          <p className="text-lg leading-relaxed text-white/80">
             {feature.description}
           </p>
         </div>
       </div>
 
-      {/* Image Placeholder */}
       <div className="relative z-10 mt-8 flex grow items-center justify-center overflow-hidden rounded-2xl bg-black/20">
-        <div className="text-center text-white/40">
-          <span className="block text-4xl">🖼️</span>
-          <span className="text-xs font-medium tracking-wider uppercase">
-            Placeholder
-          </span>
-        </div>
+        <img
+          src={`/${feature.title.toLowerCase().replace(/ /g, '-')}.png`}
+          alt={feature.title}
+          className="h-full w-full object-cover"
+        />
       </div>
     </motion.div>
   );
